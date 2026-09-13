@@ -227,10 +227,10 @@
                 <div class="title-underline"></div>
             </div>
             <div class="projects-grid">
-                <!-- AI Video Production (Playable directly on site) -->
-                <div class="project-card reveal" data-video-id="iwWcWjnj020" data-video-title="AI Video Production" data-vertical="true">
+                <!-- AI Video Production (9:16 Vertical Video) -->
+                <div class="project-card reveal" data-video-id="iwWcWjnj020" data-video-title="AI Video Production" data-aspect="9:16">
                     <div class="project-image video-trigger" style="background: url('yt-thumb.jpg') center/cover no-repeat;">
-                        <div class="video-badge"><i class="fab fa-youtube"></i> Play Video</div>
+                        <div class="video-badge"><i class="fab fa-youtube"></i> 9:16 Video</div>
                         <button class="play-btn video-trigger-btn" aria-label="Play AI Video Production">
                             <i class="fas fa-play"></i>
                         </button>
@@ -239,13 +239,14 @@
                         <span class="project-category">AI Video Production</span>
                         <h3>AI Cinematic Video Showcase</h3>
                         <button class="project-link video-trigger-btn" aria-label="Watch Video">
-                            Watch Now <i class="fas fa-play-circle"></i>
+                            Watch Full Screen <i class="fas fa-play-circle"></i>
                         </button>
                     </div>
                 </div>
-                <!-- Project 1 -->
-                <div class="project-card reveal-delay-1">
+                <!-- Project 1 (16:9 Landscape Video) -->
+                <div class="project-card reveal-delay-1" data-aspect="16:9">
                     <div class="project-image" style="background: linear-gradient(45deg, #111, #222);">
+                        <div class="video-badge">16:9</div>
                         <div class="play-btn"><i class="fas fa-play"></i></div>
                     </div>
                     <div class="project-details">
@@ -254,9 +255,10 @@
                         <a href="#" class="project-link">Watch <i class="fas fa-arrow-right"></i></a>
                     </div>
                 </div>
-                <!-- Project 2 -->
-                <div class="project-card reveal-delay-2">
+                <!-- Project 2 (16:9 Landscape Video) -->
+                <div class="project-card reveal-delay-2" data-aspect="16:9">
                     <div class="project-image" style="background: linear-gradient(45deg, #0d1b2a, #1b263b);">
+                        <div class="video-badge">16:9</div>
                         <div class="play-btn"><i class="fas fa-play"></i></div>
                     </div>
                     <div class="project-details">
@@ -265,9 +267,10 @@
                         <a href="#" class="project-link">Watch <i class="fas fa-arrow-right"></i></a>
                     </div>
                 </div>
-                <!-- Project 3 -->
-                <div class="project-card reveal-delay-3">
+                <!-- Project 3 (16:9 Landscape Video) -->
+                <div class="project-card reveal-delay-3" data-aspect="16:9">
                     <div class="project-image" style="background: linear-gradient(45deg, #2b0b1a, #4a154b);">
+                        <div class="video-badge">16:9</div>
                         <div class="play-btn"><i class="fas fa-play"></i></div>
                     </div>
                     <div class="project-details">
@@ -359,22 +362,32 @@
         <span class="whatsapp-tooltip">Chat with us on WhatsApp</span>
     </a>
 
-    <!-- Video Lightbox Modal (Direct On-Site Playback) -->
+    <!-- Full-Screen Video Modal (Dynamic 9:16 or 16:9 with Visible Back Button) -->
     <div class="video-modal" id="videoModal" aria-hidden="true" role="dialog">
         <div class="video-modal-backdrop" id="modalBackdrop"></div>
         <div class="video-modal-container">
-            <button class="modal-close-btn" id="modalCloseBtn" aria-label="Close video player">
-                <i class="fas fa-times"></i>
-            </button>
-            <div class="video-player-wrapper vertical-video">
-                <iframe id="videoIframe" src="" title="YouTube Video Player" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-            </div>
-            <div class="modal-video-footer">
+            <!-- Top Control Bar with Clear Back Button -->
+            <div class="modal-top-bar">
+                <button class="modal-back-btn" id="modalBackBtn" aria-label="Back to website">
+                    <i class="fas fa-arrow-left"></i>
+                    <span>Back</span>
+                </button>
                 <div class="modal-video-title" id="modalVideoTitle">AI Video Production</div>
-                <a id="modalExternalLink" href="https://youtube.com/shorts/iwWcWjnj020" target="_blank" rel="noopener noreferrer" class="modal-yt-btn">
-                    <i class="fab fa-youtube"></i> Watch on YouTube
-                </a>
+                <button class="modal-close-btn" id="modalCloseBtn" aria-label="Close video player">
+                    <i class="fas fa-times"></i>
+                </button>
             </div>
+
+            <!-- Dynamic Aspect Player Wrapper (Adapts to 9:16 or 16:9) -->
+            <div class="video-player-wrapper aspect-9-16" id="videoPlayerWrapper">
+                <iframe id="videoIframe" src="" title="Video Player" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+            </div>
+
+            <!-- Bottom Back Button for Handheld/Mobile Comfort -->
+            <button class="modal-bottom-back-btn" id="modalBottomBackBtn" aria-label="Back to Portfolio">
+                <i class="fas fa-arrow-left"></i>
+                <span>Back to Portfolio</span>
+            </button>
         </div>
     </div>
 
