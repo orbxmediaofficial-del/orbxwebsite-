@@ -273,8 +273,18 @@ videoTriggers.forEach(el => {
     el.addEventListener('click', (e) => {
         const card = el.closest('.project-card') || el;
 
-        // Let the dedicated AI Gallery handler manage the AI Video Production card
-        if (card && (card.id === 'aiVideoGalleryCard' || card.classList.contains('ai-gallery-trigger-card') || el.classList.contains('ai-gallery-open-btn') || el.classList.contains('ai-gallery-play-btn'))) {
+        // Dedicated AI Video Production card triggers sub-gallery
+        const isAiTrigger = (card && (card.id === 'aiVideoGalleryCard' || card.classList.contains('ai-gallery-trigger-card'))) ||
+            el.id === 'aiVideoGalleryCard' ||
+            el.classList.contains('ai-gallery-trigger-card') ||
+            el.classList.contains('ai-gallery-open-btn') ||
+            el.classList.contains('ai-gallery-play-btn') ||
+            (e.target && (e.target.closest('#aiVideoGalleryCard') || e.target.closest('.ai-gallery-trigger-card')));
+
+        if (isAiTrigger) {
+            e.preventDefault();
+            e.stopPropagation();
+            openAiGallery();
             return;
         }
 
@@ -413,7 +423,7 @@ if (agencyVideo) {
 
 // =========================================
 // AI VIDEO PRODUCTION REELS SUB-GALLERY CONTROLLER
-// (Slow-Motion 0.5x YouTube Previews & Fullscreen Expansion)
+// (Slow-Motion 0.5x Ambient YouTube Previews & Fullscreen Expansion)
 // =========================================
 const aiGalleryModal = document.getElementById('aiGalleryModal');
 const aiGalleryBackBtn = document.getElementById('aiGalleryBackBtn');
@@ -426,39 +436,43 @@ const aiGalleryTriggerCard = document.getElementById('aiVideoGalleryCard');
 let aiYtPlayers = [];
 let isAiYtApiReady = false;
 
+// Send command to all embedded iframes via postMessage (instant, zero-dependency)
+function sendReelIframeCommand(func, args = []) {
+    const iframes = document.querySelectorAll('.ai-reel-player-embed iframe');
+    iframes.forEach(iframe => {
+        try {
+            if (iframe && iframe.contentWindow) {
+                iframe.contentWindow.postMessage(JSON.stringify({
+                    event: 'command',
+                    func: func,
+                    args: args
+                }), '*');
+            }
+        } catch (err) { }
+    });
+}
+
 // YouTube API Ready Callback
 window.onYouTubeIframeAPIReady = function () {
     isAiYtApiReady = true;
-    if (aiGalleryModal && aiGalleryModal.classList.contains('active')) {
-        initAiSlowMoPlayers();
-    }
+    initAiSlowMoPlayers();
 };
+
+// If YouTube API already loaded before script parsed
+if (window.YT && window.YT.Player) {
+    isAiYtApiReady = true;
+}
 
 function initAiSlowMoPlayers() {
     if (!window.YT || !window.YT.Player) return;
 
     aiReelBoxes.forEach((box, index) => {
         const videoId = box.getAttribute('data-video-id');
-        const containerId = `aiPlayer${index}`;
-        const container = document.getElementById(containerId);
+        const iframe = box.querySelector('iframe');
 
-        if (videoId && container && !aiYtPlayers[index]) {
+        if (iframe && !aiYtPlayers[index]) {
             try {
-                aiYtPlayers[index] = new YT.Player(containerId, {
-                    videoId: videoId,
-                    playerVars: {
-                        autoplay: 1,
-                        mute: 1,
-                        controls: 0,
-                        loop: 1,
-                        playlist: videoId,
-                        playsinline: 1,
-                        modestbranding: 1,
-                        rel: 0,
-                        iv_load_policy: 3,
-                        disablekb: 1,
-                        fs: 0
-                    },
+                aiYtPlayers[index] = new YT.Player(iframe, {
                     events: {
                         onReady: (event) => {
                             try {
@@ -471,7 +485,8 @@ function initAiSlowMoPlayers() {
                         onStateChange: (event) => {
                             if (event.data === YT.PlayerState.PLAYING) {
                                 try {
-                                    event.target.setPlaybackRate(0.5); // Enforce slow-motion
+                                    event.target.setPlaybackRate(0.5);
+                                    box.classList.add('player-loaded');
                                 } catch (e) { }
                             } else if (event.data === YT.PlayerState.ENDED) {
                                 try {
@@ -482,14 +497,16 @@ function initAiSlowMoPlayers() {
                         }
                     }
                 });
-            } catch (e) {
-                console.warn('Could not initialize YT reel player', e);
-            }
+            } catch (e) { }
         }
     });
 }
 
 function pauseAiSlowMoPlayers() {
+    // Via postMessage
+    sendReelIframeCommand('pauseVideo');
+
+    // Via YT.Player instances
     aiYtPlayers.forEach(player => {
         try {
             if (player && typeof player.pauseVideo === 'function') {
@@ -500,9 +517,16 @@ function pauseAiSlowMoPlayers() {
 }
 
 function resumeAiSlowMoPlayers() {
+    // Via postMessage: ensure sound is muted and speed is 0.5x
+    sendReelIframeCommand('mute');
+    sendReelIframeCommand('setPlaybackRate', [0.5]);
+    sendReelIframeCommand('playVideo');
+
+    // Via YT.Player instances
     aiYtPlayers.forEach(player => {
         try {
             if (player && typeof player.playVideo === 'function') {
+                player.mute();
                 player.setPlaybackRate(0.5);
                 player.playVideo();
             }
@@ -510,24 +534,42 @@ function resumeAiSlowMoPlayers() {
     });
 }
 
-function openAiGallery() {
+function openAiGallery(e) {
+    if (e && typeof e.preventDefault === 'function') {
+        e.preventDefault();
+        e.stopPropagation();
+    }
     if (!aiGalleryModal) return;
 
     aiGalleryModal.classList.add('active');
     aiGalleryModal.setAttribute('aria-hidden', 'false');
     document.body.style.overflow = 'hidden';
 
-    // Initialize or resume slow-motion preview players
-    if (window.YT && window.YT.Player) {
-        if (aiYtPlayers.length === 0) {
-            initAiSlowMoPlayers();
-        } else {
-            resumeAiSlowMoPlayers();
-        }
+    // Remove any posters once gallery is open
+    document.querySelectorAll('.ai-reel-box').forEach(b => b.classList.add('player-loaded'));
+
+    // Start 0.5x slow-motion ambient playback across all 6 reels
+    resumeAiSlowMoPlayers();
+    setTimeout(resumeAiSlowMoPlayers, 400);
+    setTimeout(resumeAiSlowMoPlayers, 1200);
+
+    if (window.YT && window.YT.Player && aiYtPlayers.length === 0) {
+        initAiSlowMoPlayers();
     }
+
+    // Push browser history state so mobile back button returns cleanly
+    try {
+        if (!window.history.state || window.history.state.modal !== 'aiGallery') {
+            window.history.pushState({ modal: 'aiGallery' }, '');
+        }
+    } catch (err) { }
 }
 
-function closeAiGallery() {
+function closeAiGallery(e) {
+    if (e && typeof e.preventDefault === 'function') {
+        e.preventDefault();
+        e.stopPropagation();
+    }
     if (!aiGalleryModal) return;
 
     aiGalleryModal.classList.remove('active');
@@ -537,14 +579,34 @@ function closeAiGallery() {
     pauseAiSlowMoPlayers();
 }
 
-// Click trigger for AI Video Production card in Featured Work section
-if (aiGalleryTriggerCard) {
-    aiGalleryTriggerCard.addEventListener('click', (e) => {
+function openReelFullscreen(videoId, title) {
+    if (!videoId) return;
+    pauseAiSlowMoPlayers();
+    openVideoModal(videoId, title || 'AI Video Production Reel', '9:16');
+}
+
+// Expose globally to ensure inline onclick in HTML always works
+window.openAiGallery = openAiGallery;
+window.closeAiGallery = closeAiGallery;
+window.openReelFullscreen = openReelFullscreen;
+
+// Global capture-phase click listener for AI Video trigger elements
+document.addEventListener('click', (e) => {
+    const aiTrigger = e.target.closest('#aiVideoGalleryCard, .ai-gallery-trigger-card, .ai-gallery-open-btn, .ai-gallery-play-btn');
+    if (aiTrigger) {
         e.preventDefault();
         e.stopPropagation();
         openAiGallery();
-    });
+    }
+}, true);
+
+// Direct listeners on AI Gallery Trigger Card
+if (aiGalleryTriggerCard) {
+    aiGalleryTriggerCard.addEventListener('click', openAiGallery);
 }
+document.querySelectorAll('.ai-gallery-open-btn, .ai-gallery-play-btn').forEach(btn => {
+    btn.addEventListener('click', openAiGallery);
+});
 
 // Click triggers for all 6 portrait reel boxes inside the sub-gallery
 aiReelBoxes.forEach(box => {
@@ -553,13 +615,7 @@ aiReelBoxes.forEach(box => {
         e.stopPropagation();
         const videoId = box.getAttribute('data-video-id');
         const title = box.getAttribute('data-video-title') || 'AI Video Production Reel';
-
-        if (videoId) {
-            // Pause slow-motion previews while watching full screen
-            pauseAiSlowMoPlayers();
-            // Launch full screen modal with audio and controls in 9:16 vertical ratio
-            openVideoModal(videoId, title, '9:16');
-        }
+        openReelFullscreen(videoId, title);
     });
 });
 
@@ -577,5 +633,14 @@ window.addEventListener('keydown', (e) => {
         } else if (aiGalleryModal && aiGalleryModal.classList.contains('active')) {
             closeAiGallery();
         }
+    }
+});
+
+// Mobile / browser back button navigation support
+window.addEventListener('popstate', () => {
+    if (videoModal && videoModal.classList.contains('active')) {
+        closeVideoModal();
+    } else if (aiGalleryModal && aiGalleryModal.classList.contains('active')) {
+        closeAiGallery();
     }
 });

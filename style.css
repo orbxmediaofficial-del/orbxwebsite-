@@ -8,43 +8,43 @@
     --bg-card: rgba(22, 16, 14, 0.65);
     --text-primary: #ffffff;
     --text-secondary: #b8b0a9;
-    
+
     /* Polished Copper / Rose-Gold Palette */
     --copper-light: #FFB48F;
     --copper-primary: #E58A67;
     --copper-deep: #C76D49;
     --copper-glow: rgba(229, 138, 103, 0.45);
-    
+
     /* Radiant Warm Gold / Champagne Palette */
     --gold-light: #FFE29E;
     --gold-primary: #F6C869;
     --gold-deep: #D49B2A;
     --gold-glow: rgba(246, 200, 105, 0.35);
-    
+
     /* Theme Accents */
     --accent-color: var(--copper-primary);
     --accent-glow: var(--copper-glow);
     --secondary-color: var(--gold-primary);
     --secondary-glow: var(--gold-glow);
-    
+
     /* Metallic Gradients */
     --metallic-gradient: linear-gradient(135deg, #FFB48F 0%, #E58A67 30%, #F6C869 75%, #FFE29E 100%);
     --copper-gradient: linear-gradient(135deg, #FFB48F 0%, #E58A67 50%, #B85934 100%);
     --gold-gradient: linear-gradient(135deg, #FFE29E 0%, #F6C869 50%, #C4881E 100%);
-    
+
     /* Luxury Glassmorphism */
     --glass-bg: rgba(25, 18, 15, 0.55);
     --glass-border: rgba(246, 200, 105, 0.12);
     --glass-border-hover: rgba(246, 200, 105, 0.35);
     --glass-shadow: 0 16px 40px 0 rgba(0, 0, 0, 0.5);
-    
+
     /* Typography */
     --font-heading: 'Outfit', sans-serif;
     --font-body: 'Inter', sans-serif;
-    
+
     /* Spacing */
     --section-padding: 110px 0;
-    
+
     /* Transitions */
     --transition-fast: 0.2s ease;
     --transition-normal: 0.4s cubic-bezier(0.16, 1, 0.3, 1);
@@ -108,7 +108,11 @@ body {
 }
 
 /* Typography Headings */
-h1, h2, h3, h4, .logo {
+h1,
+h2,
+h3,
+h4,
+.logo {
     font-family: var(--font-heading);
     font-weight: 600;
     line-height: 1.2;
@@ -193,7 +197,8 @@ ul {
 }
 
 /* Glass Panels */
-.glass-panel, .glass-card {
+.glass-panel,
+.glass-card {
     background: var(--glass-bg);
     backdrop-filter: blur(14px);
     -webkit-backdrop-filter: blur(14px);
@@ -359,8 +364,17 @@ ul {
 }
 
 @keyframes pulse-dot {
-    0%, 100% { opacity: 1; transform: scale(1); }
-    50% { opacity: 0.4; transform: scale(0.8); }
+
+    0%,
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+
+    50% {
+        opacity: 0.4;
+        transform: scale(0.8);
+    }
 }
 
 .hero-title {
@@ -485,20 +499,23 @@ ul {
     left: -50%;
     width: 200%;
     height: 200%;
-    background: linear-gradient(
-        45deg,
-        transparent 45%,
-        rgba(255, 230, 170, 0.08) 50%,
-        transparent 55%
-    );
+    background: linear-gradient(45deg,
+            transparent 45%,
+            rgba(255, 230, 170, 0.08) 50%,
+            transparent 55%);
     transform: rotate(30deg);
     animation: lightSweep 8s linear infinite;
     pointer-events: none;
 }
 
 @keyframes lightSweep {
-    0% { transform: translateY(-100%) rotate(30deg); }
-    100% { transform: translateY(100%) rotate(30deg); }
+    0% {
+        transform: translateY(-100%) rotate(30deg);
+    }
+
+    100% {
+        transform: translateY(100%) rotate(30deg);
+    }
 }
 
 .hero-logo-img {
@@ -542,15 +559,31 @@ ul {
 }
 
 @keyframes float {
-    0% { transform: translateY(0px) rotate(0deg); }
-    50% { transform: translateY(-16px) rotate(1.5deg); }
-    100% { transform: translateY(0px) rotate(0deg); }
+    0% {
+        transform: translateY(0px) rotate(0deg);
+    }
+
+    50% {
+        transform: translateY(-16px) rotate(1.5deg);
+    }
+
+    100% {
+        transform: translateY(0px) rotate(0deg);
+    }
 }
 
 @keyframes floatGlow {
-    0% { transform: scale(1) translate(0, 0); }
-    50% { transform: scale(1.1) translate(-10px, -10px); }
-    100% { transform: scale(1) translate(0, 0); }
+    0% {
+        transform: scale(1) translate(0, 0);
+    }
+
+    50% {
+        transform: scale(1.1) translate(-10px, -10px);
+    }
+
+    100% {
+        transform: scale(1) translate(0, 0);
+    }
 }
 
 /* =========================================
@@ -652,8 +685,17 @@ ul {
 }
 
 @keyframes livePulse {
-    0%, 100% { transform: scale(1); opacity: 1; }
-    50% { transform: scale(1.4); opacity: 0.6; }
+
+    0%,
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+
+    50% {
+        transform: scale(1.4);
+        opacity: 0.6;
+    }
 }
 
 .about-video-floating-ctrls {
@@ -1139,7 +1181,7 @@ ul {
 .video-modal {
     position: fixed;
     inset: 0;
-    z-index: 10000;
+    z-index: 100005;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -1346,32 +1388,32 @@ ul {
         padding: 0 4px;
         margin-bottom: 10px;
     }
-    
+
     .modal-back-btn {
         padding: 8px 16px;
         font-size: 0.88rem;
     }
-    
+
     .modal-video-title {
         font-size: 0.92rem;
     }
-    
+
     .modal-close-btn {
         width: 38px;
         height: 38px;
         font-size: 1.1rem;
     }
-    
+
     .modal-bottom-back-btn {
         display: flex;
     }
-    
+
     .video-player-wrapper.aspect-9-16 {
         width: min(calc((100dvh - 150px) * 9 / 16), 92vw, 380px);
         height: min(calc(100dvh - 150px), calc(92vw * 16 / 9));
         border-radius: 16px;
     }
-    
+
     .video-player-wrapper.aspect-16-9 {
         width: min(100%, 94vw);
         height: auto;
@@ -1653,8 +1695,15 @@ ul {
 }
 
 @keyframes whatsappPulse {
-    0% { transform: scale(1); opacity: 0.8; }
-    100% { transform: scale(1.35); opacity: 0; }
+    0% {
+        transform: scale(1);
+        opacity: 0.8;
+    }
+
+    100% {
+        transform: scale(1.35);
+        opacity: 0;
+    }
 }
 
 .floating-whatsapp:hover {
@@ -1678,7 +1727,7 @@ ul {
     transform: translateX(10px);
     transition: opacity 0.3s ease, transform 0.3s ease;
     border: 1px solid rgba(246, 200, 105, 0.25);
-    box-shadow: 0 4px 20px rgba(0,0,0,0.6);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6);
 }
 
 .floating-whatsapp:hover .whatsapp-tooltip {
@@ -1767,7 +1816,8 @@ footer {
     transition: all 0.8s cubic-bezier(0.5, 0, 0, 1);
 }
 
-.reveal.active, .reveal-right.active {
+.reveal.active,
+.reveal-right.active {
     opacity: 1;
     transform: translate(0);
 }
@@ -1796,7 +1846,7 @@ footer {
         grid-template-columns: 1fr;
         padding: 40px;
     }
-    
+
     .hero {
         flex-direction: column;
         justify-content: center;
@@ -1804,7 +1854,7 @@ footer {
         padding-top: 130px;
         padding-bottom: 60px;
     }
-    
+
     .hero .hero-content {
         padding-left: 24px;
         padding-right: 24px;
@@ -1813,15 +1863,15 @@ footer {
         align-items: center;
         max-width: 100%;
     }
-    
+
     .hero-desc {
         text-align: center;
     }
-    
+
     .hero-cta {
         justify-content: center;
     }
-    
+
     .hero-graphic {
         position: static;
         width: 100%;
@@ -1830,12 +1880,12 @@ footer {
         display: flex;
         justify-content: center;
     }
-    
+
     .logo-showcase-wrapper {
         width: 340px;
         height: 340px;
     }
-    
+
     .showcase-card {
         width: 320px;
         padding: 32px 24px 28px;
@@ -1846,28 +1896,28 @@ footer {
         grid-template-columns: 1fr;
         gap: 44px;
     }
-    
+
     .about-image-wrapper {
         display: flex;
         justify-content: center;
         width: 100%;
     }
-    
+
     .about-video-card {
         max-width: 310px;
         margin: 0 auto;
     }
-    
+
     .about-text {
         text-align: center;
         max-width: 700px;
         margin: 0 auto;
     }
-    
+
     .about-text .studio-tag {
         margin: 0 auto 12px;
     }
-    
+
     .stats {
         justify-content: center;
         gap: 32px;
@@ -1878,11 +1928,11 @@ footer {
     .section-title {
         font-size: 2rem;
     }
-    
+
     .mobile-menu-btn {
         display: block;
     }
-    
+
     .nav-links {
         position: fixed;
         top: 0;
@@ -1896,27 +1946,27 @@ footer {
         transition: var(--transition-normal);
         z-index: 999;
     }
-    
+
     .nav-links.active {
         right: 0;
     }
-    
+
     .about-content {
         grid-template-columns: 1fr;
         gap: 36px;
     }
-    
+
     .projects-grid {
         grid-template-columns: 1fr;
         gap: 24px;
     }
-    
+
     .stats {
         flex-wrap: wrap;
         justify-content: center;
         gap: 24px;
     }
-    
+
     .service-item {
         flex-direction: row;
         align-items: flex-start;
@@ -1924,18 +1974,18 @@ footer {
         padding: 22px 24px;
         gap: 20px;
     }
-    
+
     .service-number {
         font-size: 2.2rem;
         margin-right: 0;
         margin-bottom: 0;
     }
-    
+
     .service-info h3 {
         font-size: 1.18rem;
         margin-bottom: 6px;
     }
-    
+
     .service-info p {
         font-size: 0.92rem;
         line-height: 1.5;
@@ -2088,21 +2138,21 @@ footer {
     .video-modal-container {
         padding: 6px;
     }
-    
+
     .modal-top-bar {
         margin-bottom: 6px;
     }
-    
+
     .modal-bottom-back-btn {
         display: none !important;
     }
-    
+
     .video-player-wrapper.aspect-9-16 {
         height: calc(100dvh - 54px);
         width: calc((100dvh - 54px) * 9 / 16);
         max-height: calc(100dvh - 54px);
     }
-    
+
     .video-player-wrapper.aspect-16-9 {
         height: calc(100dvh - 54px);
         width: calc((100dvh - 54px) * 16 / 9);
@@ -2132,7 +2182,7 @@ footer {
     left: 0;
     width: 100%;
     height: 100%;
-    z-index: 99999;
+    z-index: 99995;
     display: flex;
     justify-content: center;
     align-items: flex-start;
@@ -2167,7 +2217,7 @@ footer {
     display: flex;
     flex-direction: column;
     position: relative;
-    z-index: 100000;
+    z-index: 99996;
 }
 
 /* Gallery Header */
@@ -2314,7 +2364,7 @@ footer {
     left: 50%;
     width: 100%;
     height: 100%;
-    transform: translate(-50%, -50%) scale(1.38);
+    transform: translate(-50%, -50%) scale(1.18);
     pointer-events: none;
 }
 
@@ -2323,6 +2373,7 @@ footer {
     height: 100%;
     border: none;
     pointer-events: none;
+    display: block;
 }
 
 .ai-reel-poster {
@@ -2331,11 +2382,13 @@ footer {
     background-size: cover;
     background-position: center;
     opacity: 1;
-    transition: opacity 0.5s ease;
+    transition: opacity 0.6s ease;
     z-index: 1;
+    pointer-events: none;
 }
 
-.ai-reel-box.player-loaded .ai-reel-poster {
+.ai-reel-box.player-loaded .ai-reel-poster,
+.ai-gallery-modal.active .ai-reel-poster {
     opacity: 0;
     pointer-events: none;
 }

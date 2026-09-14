@@ -14,7 +14,7 @@
     <link
         href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600&display=swap"
         rel="stylesheet">
-    <link rel="stylesheet" href="style.css?v=2.3">
+    <link rel="stylesheet" href="style.css?v=3.1">
     <!-- Font Awesome for Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- YouTube IFrame Player API for Slow-Motion Reels -->
@@ -309,18 +309,19 @@
             <div class="projects-grid">
                 <!-- AI Video Production (Opens 6 Reels Sub-Gallery) -->
                 <div class="project-card reveal ai-gallery-trigger-card" id="aiVideoGalleryCard"
-                    data-aspect="16:9" role="button" tabindex="0" aria-label="Explore AI Video Production Gallery">
-                    <div class="project-image video-trigger">
+                    data-aspect="16:9" role="button" tabindex="0" aria-label="Explore AI Video Production Gallery"
+                    onclick="openAiGallery(event)">
+                    <div class="project-image video-trigger" onclick="openAiGallery(event)">
                         <div class="project-thumb-bg" style="background: url('yt-thumb.jpg') center/cover no-repeat; width: 100%; height: 100%; position: absolute; inset: 0;"></div>
                         <div class="video-badge"><i class="fas fa-layer-group"></i> 6 AI Reels Collection</div>
-                        <div class="play-btn ai-gallery-play-btn" aria-label="Open AI Video Production Gallery">
+                        <div class="play-btn ai-gallery-play-btn" aria-label="Open AI Video Production Gallery" onclick="openAiGallery(event)">
                             <i class="fas fa-play"></i>
                         </div>
                     </div>
                     <div class="project-details">
                         <span class="project-category">AI Video Production</span>
                         <h3>AI Cinematic Video Showcase</h3>
-                        <button class="project-link ai-gallery-open-btn" aria-label="Explore AI Video Gallery">
+                        <button class="project-link ai-gallery-open-btn" type="button" aria-label="Explore AI Video Gallery" onclick="openAiGallery(event)">
                             Explore 6 AI Reels <i class="fas fa-arrow-right"></i>
                         </button>
                     </div>
@@ -510,11 +511,11 @@
 
     <!-- AI Video Production Sub-Gallery Modal (Portrait Instagram Reels View) -->
     <div class="ai-gallery-modal" id="aiGalleryModal" aria-hidden="true" role="dialog">
-        <div class="ai-gallery-backdrop" id="aiGalleryBackdrop"></div>
+        <div class="ai-gallery-backdrop" id="aiGalleryBackdrop" onclick="closeAiGallery(event)"></div>
         <div class="ai-gallery-container">
             <!-- Header Bar with Back Button -->
             <div class="ai-gallery-header">
-                <button class="ai-gallery-back-btn" id="aiGalleryBackBtn" aria-label="Back to Featured Work">
+                <button class="ai-gallery-back-btn" id="aiGalleryBackBtn" type="button" aria-label="Back to Featured Work" onclick="closeAiGallery(event)">
                     <i class="fas fa-arrow-left"></i>
                     <span>Back to Featured Work</span>
                 </button>
@@ -523,7 +524,7 @@
                     <h2 class="ai-gallery-heading">AI Video Production Gallery</h2>
                     <p class="ai-gallery-subheading">Curated vertical reels playing in ambient slow-motion. Tap any reel to launch in full screen with high-fidelity audio.</p>
                 </div>
-                <button class="ai-gallery-close-btn" id="aiGalleryCloseBtn" aria-label="Close AI Gallery">
+                <button class="ai-gallery-close-btn" id="aiGalleryCloseBtn" type="button" aria-label="Close AI Gallery" onclick="closeAiGallery(event)">
                     <i class="fas fa-times"></i>
                 </button>
             </div>
@@ -531,9 +532,11 @@
             <!-- 6 Portrait Instagram Reels Style Boxes -->
             <div class="ai-reels-grid">
                 <!-- Reel 1 -->
-                <div class="ai-reel-box glass-panel" data-video-id="CW33Gn8cU8w" data-video-title="AI Reel 01 • Cybernetic Vision" data-index="0">
+                <div class="ai-reel-box glass-panel" data-video-id="CW33Gn8cU8w" data-video-title="AI Reel 01 • Cybernetic Vision" data-index="0" onclick="openReelFullscreen('CW33Gn8cU8w', 'AI Reel 01 • Cybernetic Vision')">
                     <div class="ai-reel-player-container">
-                        <div class="ai-reel-player-embed" id="aiPlayer0"></div>
+                        <div class="ai-reel-player-embed" id="aiPlayer0">
+                            <iframe id="aiIframe0" src="https://www.youtube-nocookie.com/embed/CW33Gn8cU8w?autoplay=1&mute=1&controls=0&loop=1&playlist=CW33Gn8cU8w&playsinline=1&modestbranding=1&rel=0&iv_load_policy=3&disablekb=1&enablejsapi=1" title="AI Reel 01 • Cybernetic Vision" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                        </div>
                         <div class="ai-reel-poster" style="background-image: url('https://img.youtube.com/vi/CW33Gn8cU8w/hqdefault.jpg');"></div>
                         <div class="ai-reel-overlay">
                             <div class="ai-reel-top-bar">
@@ -553,9 +556,11 @@
                 </div>
 
                 <!-- Reel 2 -->
-                <div class="ai-reel-box glass-panel" data-video-id="bb1mzI0MaPE" data-video-title="AI Reel 02 • Neural Worldscapes" data-index="1">
+                <div class="ai-reel-box glass-panel" data-video-id="bb1mzI0MaPE" data-video-title="AI Reel 02 • Neural Worldscapes" data-index="1" onclick="openReelFullscreen('bb1mzI0MaPE', 'AI Reel 02 • Neural Worldscapes')">
                     <div class="ai-reel-player-container">
-                        <div class="ai-reel-player-embed" id="aiPlayer1"></div>
+                        <div class="ai-reel-player-embed" id="aiPlayer1">
+                            <iframe id="aiIframe1" src="https://www.youtube-nocookie.com/embed/bb1mzI0MaPE?autoplay=1&mute=1&controls=0&loop=1&playlist=bb1mzI0MaPE&playsinline=1&modestbranding=1&rel=0&iv_load_policy=3&disablekb=1&enablejsapi=1" title="AI Reel 02 • Neural Worldscapes" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                        </div>
                         <div class="ai-reel-poster" style="background-image: url('https://img.youtube.com/vi/bb1mzI0MaPE/hqdefault.jpg');"></div>
                         <div class="ai-reel-overlay">
                             <div class="ai-reel-top-bar">
@@ -575,9 +580,11 @@
                 </div>
 
                 <!-- Reel 3 -->
-                <div class="ai-reel-box glass-panel" data-video-id="cbFd-xK_hmc" data-video-title="AI Reel 03 • Fluid Morphologies" data-index="2">
+                <div class="ai-reel-box glass-panel" data-video-id="cbFd-xK_hmc" data-video-title="AI Reel 03 • Fluid Morphologies" data-index="2" onclick="openReelFullscreen('cbFd-xK_hmc', 'AI Reel 03 • Fluid Morphologies')">
                     <div class="ai-reel-player-container">
-                        <div class="ai-reel-player-embed" id="aiPlayer2"></div>
+                        <div class="ai-reel-player-embed" id="aiPlayer2">
+                            <iframe id="aiIframe2" src="https://www.youtube-nocookie.com/embed/cbFd-xK_hmc?autoplay=1&mute=1&controls=0&loop=1&playlist=cbFd-xK_hmc&playsinline=1&modestbranding=1&rel=0&iv_load_policy=3&disablekb=1&enablejsapi=1" title="AI Reel 03 • Fluid Morphologies" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                        </div>
                         <div class="ai-reel-poster" style="background-image: url('https://img.youtube.com/vi/cbFd-xK_hmc/hqdefault.jpg');"></div>
                         <div class="ai-reel-overlay">
                             <div class="ai-reel-top-bar">
@@ -597,9 +604,11 @@
                 </div>
 
                 <!-- Reel 4 -->
-                <div class="ai-reel-box glass-panel" data-video-id="-NAf_Bth1Q0" data-video-title="AI Reel 04 • Synthetic Humanoids" data-index="3">
+                <div class="ai-reel-box glass-panel" data-video-id="-NAf_Bth1Q0" data-video-title="AI Reel 04 • Synthetic Humanoids" data-index="3" onclick="openReelFullscreen('-NAf_Bth1Q0', 'AI Reel 04 • Synthetic Humanoids')">
                     <div class="ai-reel-player-container">
-                        <div class="ai-reel-player-embed" id="aiPlayer3"></div>
+                        <div class="ai-reel-player-embed" id="aiPlayer3">
+                            <iframe id="aiIframe3" src="https://www.youtube-nocookie.com/embed/-NAf_Bth1Q0?autoplay=1&mute=1&controls=0&loop=1&playlist=-NAf_Bth1Q0&playsinline=1&modestbranding=1&rel=0&iv_load_policy=3&disablekb=1&enablejsapi=1" title="AI Reel 04 • Synthetic Humanoids" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                        </div>
                         <div class="ai-reel-poster" style="background-image: url('https://img.youtube.com/vi/-NAf_Bth1Q0/hqdefault.jpg');"></div>
                         <div class="ai-reel-overlay">
                             <div class="ai-reel-top-bar">
@@ -619,9 +628,11 @@
                 </div>
 
                 <!-- Reel 5 -->
-                <div class="ai-reel-box glass-panel" data-video-id="iwWcWjnj020" data-video-title="AI Reel 05 • Cinematic AI Showcase" data-index="4">
+                <div class="ai-reel-box glass-panel" data-video-id="iwWcWjnj020" data-video-title="AI Reel 05 • Cinematic AI Showcase" data-index="4" onclick="openReelFullscreen('iwWcWjnj020', 'AI Reel 05 • Cinematic AI Showcase')">
                     <div class="ai-reel-player-container">
-                        <div class="ai-reel-player-embed" id="aiPlayer4"></div>
+                        <div class="ai-reel-player-embed" id="aiPlayer4">
+                            <iframe id="aiIframe4" src="https://www.youtube-nocookie.com/embed/iwWcWjnj020?autoplay=1&mute=1&controls=0&loop=1&playlist=iwWcWjnj020&playsinline=1&modestbranding=1&rel=0&iv_load_policy=3&disablekb=1&enablejsapi=1" title="AI Reel 05 • Cinematic AI Showcase" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                        </div>
                         <div class="ai-reel-poster" style="background-image: url('https://img.youtube.com/vi/iwWcWjnj020/hqdefault.jpg');"></div>
                         <div class="ai-reel-overlay">
                             <div class="ai-reel-top-bar">
@@ -641,9 +652,11 @@
                 </div>
 
                 <!-- Reel 6 -->
-                <div class="ai-reel-box glass-panel" data-video-id="WhaOZ298OqI" data-video-title="AI Reel 06 • Dimensions of Light" data-index="5">
+                <div class="ai-reel-box glass-panel" data-video-id="WhaOZ298OqI" data-video-title="AI Reel 06 • Dimensions of Light" data-index="5" onclick="openReelFullscreen('WhaOZ298OqI', 'AI Reel 06 • Dimensions of Light')">
                     <div class="ai-reel-player-container">
-                        <div class="ai-reel-player-embed" id="aiPlayer5"></div>
+                        <div class="ai-reel-player-embed" id="aiPlayer5">
+                            <iframe id="aiIframe5" src="https://www.youtube-nocookie.com/embed/WhaOZ298OqI?autoplay=1&mute=1&controls=0&loop=1&playlist=WhaOZ298OqI&playsinline=1&modestbranding=1&rel=0&iv_load_policy=3&disablekb=1&enablejsapi=1" title="AI Reel 06 • Dimensions of Light" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                        </div>
                         <div class="ai-reel-poster" style="background-image: url('https://img.youtube.com/vi/WhaOZ298OqI/hqdefault.jpg');"></div>
                         <div class="ai-reel-overlay">
                             <div class="ai-reel-top-bar">
@@ -665,7 +678,7 @@
 
             <!-- Bottom Back Button for Easy Mobile Thumb Navigation -->
             <div class="ai-gallery-bottom-bar">
-                <button class="ai-gallery-back-btn-bottom" id="aiGalleryBackBtnBottom">
+                <button class="ai-gallery-back-btn-bottom" id="aiGalleryBackBtnBottom" type="button" onclick="closeAiGallery(event)">
                     <i class="fas fa-arrow-left"></i>
                     <span>Back to Featured Work</span>
                 </button>
@@ -673,7 +686,7 @@
         </div>
     </div>
 
-    <script src="script.js"></script>
+    <script src="script.js?v=3.1"></script>
 </body>
 
 </html>
