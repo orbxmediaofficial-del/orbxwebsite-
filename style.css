@@ -563,50 +563,217 @@ ul {
 
 .about-content {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 60px;
+    grid-template-columns: minmax(280px, 320px) 1fr;
+    gap: 52px;
     align-items: center;
 }
 
-.about-image {
-    aspect-ratio: 4/5;
-    border-radius: 28px;
+.about-image-wrapper {
     display: flex;
-    align-items: center;
-    justify-content: center;
-    background: linear-gradient(160deg, rgba(35, 25, 20, 0.65), rgba(15, 12, 10, 0.8));
-    position: relative;
-    overflow: hidden;
-    border: 1px solid var(--glass-border);
-}
-
-.about-emblem-container {
-    position: relative;
-    display: flex;
-    align-items: center;
     justify-content: center;
     width: 100%;
+}
+
+.about-video-card {
+    width: 100%;
+    max-width: 320px;
+    border-radius: 28px;
+    padding: 14px;
+    background: linear-gradient(160deg, rgba(30, 20, 16, 0.8), rgba(15, 12, 10, 0.92));
+    border: 1px solid rgba(246, 200, 105, 0.35);
+    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.75), 0 0 35px rgba(229, 138, 103, 0.15);
+    transition: var(--transition-normal);
+}
+
+.about-video-card:hover {
+    border-color: rgba(246, 200, 105, 0.55);
+    box-shadow: 0 30px 70px rgba(0, 0, 0, 0.85), 0 0 45px rgba(246, 200, 105, 0.25);
+    transform: translateY(-4px);
+}
+
+.about-video-player-box {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 9 / 16;
+    border-radius: 20px;
+    overflow: hidden;
+    background: #000000;
+    border: 1px solid rgba(246, 200, 105, 0.25);
+    box-shadow: inset 0 0 25px rgba(0, 0, 0, 0.9);
+}
+
+.about-agency-video {
+    width: 100%;
     height: 100%;
-    padding: 40px;
+    aspect-ratio: 9 / 16;
+    object-fit: cover;
+    display: block;
+    border-radius: 19px;
+    background: #000000;
+    cursor: pointer;
+    transition: filter 0.3s ease;
 }
 
-.about-logo-overlay {
-    width: 80%;
-    max-width: 290px;
-    height: auto;
-    object-fit: contain;
-    filter: drop-shadow(0 15px 30px rgba(0, 0, 0, 0.8)) drop-shadow(0 0 35px rgba(246, 200, 105, 0.3));
-    z-index: 2;
-    animation: float 7s ease-in-out infinite;
+.about-agency-video:hover {
+    filter: brightness(1.04);
 }
 
-.about-glow-orb {
+.about-video-badge {
     position: absolute;
-    width: 240px;
-    height: 240px;
+    top: 12px;
+    left: 12px;
+    background: rgba(10, 7, 6, 0.85);
+    border: 1px solid rgba(246, 200, 105, 0.35);
+    color: var(--gold-light);
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    padding: 5px 12px;
+    border-radius: 50px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    pointer-events: none;
+    backdrop-filter: blur(10px);
+    z-index: 3;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+}
+
+.video-live-dot {
+    width: 7px;
+    height: 7px;
     border-radius: 50%;
-    background: radial-gradient(circle, var(--copper-glow) 0%, transparent 70%);
-    filter: blur(45px);
+    background: #10b981;
+    box-shadow: 0 0 8px #10b981;
+    animation: livePulse 1.8s infinite;
+}
+
+@keyframes livePulse {
+    0%, 100% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.4); opacity: 0.6; }
+}
+
+.about-video-floating-ctrls {
+    position: absolute;
+    bottom: 12px;
+    right: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    z-index: 3;
+}
+
+.about-video-ctrl-btn {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: rgba(18, 12, 10, 0.85);
+    border: 1px solid rgba(246, 200, 105, 0.4);
+    color: var(--gold-light);
+    font-size: 0.9rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.6);
+    transition: all 0.2s ease;
+}
+
+.about-video-ctrl-btn:hover {
+    background: var(--metallic-gradient);
+    color: #070504;
+    border-color: transparent;
+    transform: scale(1.1);
+    box-shadow: 0 0 15px rgba(246, 200, 105, 0.5);
+}
+
+.about-video-ctrl-btn:active {
+    transform: scale(0.95);
+}
+
+.about-video-meta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 14px;
+    padding-top: 12px;
+    border-top: 1px solid rgba(246, 200, 105, 0.12);
+    gap: 12px;
+}
+
+.about-video-brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-width: 0;
+}
+
+.about-video-logo {
+    width: 32px;
+    height: 32px;
+    object-fit: contain;
+    filter: drop-shadow(0 2px 8px rgba(246, 200, 105, 0.3));
+    flex-shrink: 0;
+}
+
+.about-video-texts {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+
+.about-video-label {
+    font-family: var(--font-heading);
+    font-size: 0.88rem;
+    font-weight: 700;
+    color: var(--gold-light);
+    letter-spacing: 0.5px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.about-video-subtitle {
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.about-expand-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 7px 14px;
+    border-radius: 50px;
+    background: rgba(229, 138, 103, 0.12);
+    border: 1px solid rgba(246, 200, 105, 0.3);
+    color: var(--gold-light);
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: var(--transition-fast);
+    flex-shrink: 0;
+}
+
+.about-expand-btn i {
+    font-size: 0.85rem;
+    color: var(--gold-primary);
+}
+
+.about-expand-btn:hover {
+    background: var(--metallic-gradient);
+    color: #070504;
+    border-color: transparent;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(246, 200, 105, 0.4);
+}
+
+.about-expand-btn:hover i {
+    color: #070504;
 }
 
 .studio-tag {
@@ -800,10 +967,10 @@ ul {
    ========================================= */
 .projects-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr));
     gap: 32px;
     margin-bottom: 48px;
-    align-items: start;
+    align-items: stretch;
 }
 
 .project-card {
@@ -812,6 +979,9 @@ ul {
     background: var(--glass-bg);
     border: 1px solid var(--glass-border);
     transition: var(--transition-normal);
+    display: flex;
+    flex-direction: column;
+    height: 100%;
 }
 
 .project-card:hover {
@@ -822,6 +992,7 @@ ul {
 
 .project-image {
     aspect-ratio: 16/9;
+    width: 100%;
     position: relative;
     display: flex;
     align-items: center;
@@ -906,6 +1077,9 @@ ul {
 
 .project-details {
     padding: 24px;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
 }
 
 .project-category {
@@ -931,6 +1105,7 @@ ul {
     font-weight: 600;
     color: var(--gold-primary);
     background: none;
+    margin-top: auto;
     border: none;
     padding: 0;
     cursor: pointer;
@@ -1090,27 +1265,35 @@ ul {
     box-shadow: 0 25px 70px rgba(0, 0, 0, 0.95), 0 0 45px rgba(246, 200, 105, 0.25);
     border: 1px solid rgba(246, 200, 105, 0.4);
     transition: all 0.3s ease;
+    max-width: 100%;
 }
 
 /* 9:16 Vertical Video (Reels / Shorts) */
 .video-player-wrapper.aspect-9-16 {
-    width: min(420px, 90vw);
-    height: min(740px, calc(100dvh - 150px));
+    width: min(420px, 90vw, calc((100dvh - 150px) * 9 / 16));
+    height: min(740px, calc(100dvh - 150px), calc(90vw * 16 / 9));
     aspect-ratio: 9 / 16;
 }
 
 /* 16:9 Landscape Video (Widescreen) */
 .video-player-wrapper.aspect-16-9 {
-    width: min(1080px, 94vw);
+    width: min(1080px, 94vw, calc((100dvh - 150px) * 16 / 9));
+    height: min(608px, calc(100dvh - 150px), calc(94vw * 9 / 16));
     aspect-ratio: 16 / 9;
     max-height: calc(100dvh - 150px);
 }
 
-.video-player-wrapper iframe {
+.video-player-wrapper iframe,
+.modal-video-element {
     width: 100%;
     height: 100%;
     display: block;
     border: none;
+    background: #000000;
+}
+
+.modal-video-element {
+    object-fit: contain;
 }
 
 /* Mobile Bottom Back Button (Always visible & accessible for handheld thumb reach) */
@@ -1155,7 +1338,7 @@ ul {
     }
     
     .modal-video-title {
-        font-size: 0.95rem;
+        font-size: 0.92rem;
     }
     
     .modal-close-btn {
@@ -1169,13 +1352,15 @@ ul {
     }
     
     .video-player-wrapper.aspect-9-16 {
-        width: min(100%, calc((100dvh - 160px) * 9 / 16));
-        height: calc(100dvh - 160px);
+        width: min(calc((100dvh - 150px) * 9 / 16), 92vw, 380px);
+        height: min(calc(100dvh - 150px), calc(92vw * 16 / 9));
         border-radius: 16px;
     }
     
     .video-player-wrapper.aspect-16-9 {
-        width: 100%;
+        width: min(100%, 94vw);
+        height: auto;
+        aspect-ratio: 16 / 9;
         border-radius: 16px;
     }
 }
@@ -1640,6 +1825,38 @@ footer {
         width: 320px;
         padding: 32px 24px 28px;
     }
+
+    /* Tablet About & Video Showcase */
+    .about-content {
+        grid-template-columns: 1fr;
+        gap: 44px;
+    }
+    
+    .about-image-wrapper {
+        display: flex;
+        justify-content: center;
+        width: 100%;
+    }
+    
+    .about-video-card {
+        max-width: 310px;
+        margin: 0 auto;
+    }
+    
+    .about-text {
+        text-align: center;
+        max-width: 700px;
+        margin: 0 auto;
+    }
+    
+    .about-text .studio-tag {
+        margin: 0 auto 12px;
+    }
+    
+    .stats {
+        justify-content: center;
+        gap: 32px;
+    }
 }
 
 @media (max-width: 768px) {
@@ -1671,10 +1888,18 @@ footer {
     
     .about-content {
         grid-template-columns: 1fr;
+        gap: 36px;
+    }
+    
+    .projects-grid {
+        grid-template-columns: 1fr;
+        gap: 24px;
     }
     
     .stats {
         flex-wrap: wrap;
+        justify-content: center;
+        gap: 24px;
     }
     
     .service-item {
@@ -1686,5 +1911,139 @@ footer {
     .service-number {
         margin-right: 0;
         margin-bottom: 16px;
+    }
+}
+
+@media (max-width: 480px) {
+    .about-content {
+        gap: 28px;
+    }
+
+    .about-video-card {
+        max-width: min(100%, 290px);
+        padding: 10px;
+        border-radius: 22px;
+    }
+
+    .about-video-player-box {
+        border-radius: 16px;
+    }
+
+    .about-agency-video {
+        border-radius: 15px;
+    }
+
+    .about-video-badge {
+        top: 9px;
+        left: 9px;
+        font-size: 0.7rem;
+        padding: 4px 10px;
+    }
+
+    .about-video-floating-ctrls {
+        bottom: 9px;
+        right: 9px;
+        gap: 6px;
+    }
+
+    .about-video-ctrl-btn {
+        width: 32px;
+        height: 32px;
+        font-size: 0.82rem;
+    }
+
+    .about-video-meta {
+        margin-top: 10px;
+        padding-top: 10px;
+        gap: 8px;
+    }
+
+    .about-video-logo {
+        width: 28px;
+        height: 28px;
+    }
+
+    .about-video-label {
+        font-size: 0.82rem;
+    }
+
+    .about-video-subtitle {
+        font-size: 0.7rem;
+    }
+
+    .about-expand-btn {
+        padding: 6px 12px;
+        font-size: 0.75rem;
+    }
+
+    .stats {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 20px 14px;
+    }
+
+    .stat-number {
+        font-size: 2rem;
+    }
+
+    .projects-grid {
+        gap: 20px;
+    }
+
+    .project-details {
+        padding: 18px 16px;
+    }
+
+    .project-details h3 {
+        font-size: 1.25rem;
+    }
+}
+
+@media (max-width: 360px) {
+    .about-video-card {
+        max-width: 100%;
+        padding: 8px;
+    }
+
+    .about-video-meta {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 8px;
+        text-align: center;
+    }
+
+    .about-video-brand {
+        justify-content: center;
+    }
+
+    .about-expand-btn {
+        justify-content: center;
+        width: 100%;
+    }
+}
+
+@media (max-height: 520px) {
+    .video-modal-container {
+        padding: 6px;
+    }
+    
+    .modal-top-bar {
+        margin-bottom: 6px;
+    }
+    
+    .modal-bottom-back-btn {
+        display: none !important;
+    }
+    
+    .video-player-wrapper.aspect-9-16 {
+        height: calc(100dvh - 54px);
+        width: calc((100dvh - 54px) * 9 / 16);
+        max-height: calc(100dvh - 54px);
+    }
+    
+    .video-player-wrapper.aspect-16-9 {
+        height: calc(100dvh - 54px);
+        width: calc((100dvh - 54px) * 16 / 9);
+        max-height: calc(100dvh - 54px);
     }
 }

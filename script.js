@@ -272,7 +272,7 @@ videoTriggers.forEach(el => {
         if (rawVideo) {
             e.preventDefault();
             e.stopPropagation();
-            const explicitAspect = card.getAttribute('data-aspect');
+            const explicitAspect = card.getAttribute('data-modal-aspect') || card.getAttribute('data-aspect');
             const title = card.getAttribute('data-video-title') || 'Featured Work';
             const { videoId, aspect } = parseVideoData(rawVideo, explicitAspect);
             
