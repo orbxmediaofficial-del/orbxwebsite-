@@ -539,30 +539,7 @@ function openAiGallery(e) {
         e.preventDefault();
         e.stopPropagation();
     }
-    if (!aiGalleryModal) return;
-
-    aiGalleryModal.classList.add('active');
-    aiGalleryModal.setAttribute('aria-hidden', 'false');
-    document.body.style.overflow = 'hidden';
-
-    // Remove any posters once gallery is open
-    document.querySelectorAll('.ai-reel-box').forEach(b => b.classList.add('player-loaded'));
-
-    // Start 0.5x slow-motion ambient playback across all 6 reels
-    resumeAiSlowMoPlayers();
-    setTimeout(resumeAiSlowMoPlayers, 400);
-    setTimeout(resumeAiSlowMoPlayers, 1200);
-
-    if (window.YT && window.YT.Player && aiYtPlayers.length === 0) {
-        initAiSlowMoPlayers();
-    }
-
-    // Push browser history state so mobile back button returns cleanly
-    try {
-        if (!window.history.state || window.history.state.modal !== 'aiGallery') {
-            window.history.pushState({ modal: 'aiGallery' }, '');
-        }
-    } catch (err) { }
+    window.location.href = 'ai-video-production.html';
 }
 
 function closeAiGallery(e) {
@@ -596,7 +573,7 @@ document.addEventListener('click', (e) => {
     if (aiTrigger) {
         e.preventDefault();
         e.stopPropagation();
-        openAiGallery();
+        window.location.href = 'ai-video-production.html';
     }
 }, true);
 
