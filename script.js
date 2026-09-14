@@ -146,6 +146,7 @@ if (whatsappForm) {
 // =========================================
 const videoModal = document.getElementById('videoModal');
 const videoIframe = document.getElementById('videoIframe');
+const modalVideoElement = document.getElementById('modalVideoElement');
 const videoPlayerWrapper = document.getElementById('videoPlayerWrapper');
 const modalCloseBtn = document.getElementById('modalCloseBtn');
 const modalBackBtn = document.getElementById('modalBackBtn');
@@ -154,11 +155,17 @@ const modalBackdrop = document.getElementById('modalBackdrop');
 const modalVideoTitle = document.getElementById('modalVideoTitle');
 const videoTriggers = document.querySelectorAll('.video-trigger, .video-trigger-btn, .project-card');
 
-// Helper to extract YouTube video ID and detect aspect ratio
+// Helper to extract YouTube video ID or detect uploaded video file
 function parseVideoData(urlOrId, explicitAspect = null) {
     if (!urlOrId) return { videoId: '', aspect: '16:9' };
     
     let raw = urlOrId.trim();
+    
+    // Check if it's a direct uploaded video file (e.g. agency-video.mp4)
+    if (raw.endsWith('.mp4') || raw.endsWith('.webm') || raw.endsWith('.mov') || raw.includes('.mp4?')) {
+        return { videoId: raw, aspect: explicitAspect || '9:16' };
+    }
+
     let isShort = false;
     let videoId = raw;
 
@@ -182,8 +189,8 @@ function parseVideoData(urlOrId, explicitAspect = null) {
     return { videoId, aspect };
 }
 
-function openVideoModal(videoId, title, aspect = '9:16') {
-    if (!videoModal || !videoIframe) return;
+function openVideoModal(videoSource, title, aspect = '9:16') {
+    if (!videoModal) return;
     
     const wrapper = videoPlayerWrapper || videoModal.querySelector('.video-player-wrapper');
     if (wrapper) {
@@ -195,14 +202,36 @@ function openVideoModal(videoId, title, aspect = '9:16') {
         }
     }
     
-    // Clean YouTube embed:
-    // - Strips YouTube Shorts overlays (thumbs up / likes, comments, share, remix, channel watermark)
-    // - autoplay=1: plays immediately on open
-    // - controls=1: provides clean playback bar
-    // - rel=0: hides external recommended videos
-    // - playsinline=1: prevents unwanted external player jump on mobile
-    // - modestbranding=1 & iv_load_policy=3: eliminates annotations and badges
-    videoIframe.src = `https://www.youtube-nocookie.com/embed/${videoId}?autoplay=1&controls=1&rel=0&playsinline=1&modestbranding=1&iv_load_policy=3&disablekb=0`;
+    const isLocalVideo = videoSource.endsWith('.mp4') || videoSource.endsWith('.webm') || videoSource.endsWith('.mov');
+    
+    if (isLocalVideo) {
+        if (videoIframe) {
+            videoIframe.style.display = 'none';
+            videoIframe.src = '';
+        }
+        if (modalVideoElement) {
+            modalVideoElement.style.display = 'block';
+            modalVideoElement.src = videoSource;
+            modalVideoElement.play().catch(() => {});
+        }
+    } else {
+        if (modalVideoElement) {
+            modalVideoElement.style.display = 'none';
+            modalVideoElement.pause();
+            modalVideoElement.src = '';
+        }
+        if (videoIframe) {
+            videoIframe.style.display = 'block';
+            // Clean YouTube embed:
+            // - Strips YouTube Shorts overlays (thumbs up / likes, comments, share, remix, channel watermark)
+            // - autoplay=1: plays immediately on open
+            // - controls=1: provides clean playback bar
+            // - rel=0: hides external recommended videos
+            // - playsinline=1: prevents unwanted external player jump on mobile
+            // - modestbranding=1 & iv_load_policy=3: eliminates annotations and badges
+            videoIframe.src = `https://www.youtube-nocookie.com/embed/${videoSource}?autoplay=1&controls=1&rel=0&playsinline=1&modestbranding=1&iv_load_policy=3&disablekb=0`;
+        }
+    }
     
     if (modalVideoTitle) {
         modalVideoTitle.textContent = title || 'Featured Video';
@@ -214,12 +243,18 @@ function openVideoModal(videoId, title, aspect = '9:16') {
 }
 
 function closeVideoModal() {
-    if (!videoModal || !videoIframe) return;
+    if (!videoModal) return;
     
     videoModal.classList.remove('active');
     videoModal.setAttribute('aria-hidden', 'true');
-    // Clear iframe src immediately to terminate video and audio playback
-    videoIframe.src = '';
+    // Clear iframe & native video playback immediately
+    if (videoIframe) {
+        videoIframe.src = '';
+    }
+    if (modalVideoElement) {
+        modalVideoElement.pause();
+        modalVideoElement.src = '';
+    }
     document.body.style.overflow = '';
 }
 
@@ -260,3 +295,102 @@ window.addEventListener('keydown', (e) => {
         closeVideoModal();
     }
 });
+
+// =========================================
+// ABOUT SECTION UPLOADED AGENCY VIDEO CONTROLLER
+// (Continuous playback through scrolling, Mute toggle, Play/Pause, Fullscreen)
+// =========================================
+const agencyVideo = document.getElementById('aboutAgencyVideo');
+const agencyMuteBtn = document.getElementById('agencyMuteBtn');
+const agencyPlayPauseBtn = document.getElementById('agencyPlayPauseBtn');
+const agencyFullscreenBtn = document.getElementById('agencyFullscreenBtn');
+
+if (agencyVideo) {
+    let isManuallyPaused = false;
+
+    // Helper to start playback smoothly with muted audio
+    const startPlayback = () => {
+        agencyVideo.muted = true;
+        const playPromise = agencyVideo.play();
+        if (playPromise !== undefined) {
+            playPromise.catch(() => {
+                // Handled gracefully until user interaction allows media playback
+            });
+        }
+    };
+
+    // Ensure it plays immediately on load
+    startPlayback();
+    window.addEventListener('load', startPlayback);
+    document.addEventListener('DOMContentLoaded', startPlayback);
+
+    // Keep it playing continuously when the visitor scrolls through the page
+    window.addEventListener('scroll', () => {
+        if (agencyVideo.paused && !isManuallyPaused) {
+            startPlayback();
+        }
+    }, { passive: true });
+
+    // IntersectionObserver to guarantee continuous playback whenever in/near viewport
+    if ('IntersectionObserver' in window) {
+        const videoObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting && !isManuallyPaused && agencyVideo.paused) {
+                    startPlayback();
+                }
+            });
+        }, { threshold: 0.1 });
+        videoObserver.observe(agencyVideo);
+    }
+
+    // Toggle Sound (Mute / Unmute)
+    if (agencyMuteBtn) {
+        agencyMuteBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            agencyVideo.muted = !agencyVideo.muted;
+            const icon = agencyMuteBtn.querySelector('i');
+            if (icon) {
+                icon.className = agencyVideo.muted ? 'fas fa-volume-mute' : 'fas fa-volume-up';
+            }
+        });
+    }
+
+    // Toggle Play / Pause
+    if (agencyPlayPauseBtn) {
+        agencyPlayPauseBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            if (agencyVideo.paused) {
+                agencyVideo.play().catch(() => {});
+                isManuallyPaused = false;
+                agencyPlayPauseBtn.querySelector('i').className = 'fas fa-pause';
+            } else {
+                agencyVideo.pause();
+                isManuallyPaused = true;
+                agencyPlayPauseBtn.querySelector('i').className = 'fas fa-play';
+            }
+        });
+    }
+
+    // Click video directly to toggle play/pause
+    agencyVideo.addEventListener('click', () => {
+        if (agencyVideo.paused) {
+            agencyVideo.play().catch(() => {});
+            isManuallyPaused = false;
+            if (agencyPlayPauseBtn) agencyPlayPauseBtn.querySelector('i').className = 'fas fa-pause';
+        } else {
+            agencyVideo.pause();
+            isManuallyPaused = true;
+            if (agencyPlayPauseBtn) agencyPlayPauseBtn.querySelector('i').className = 'fas fa-play';
+        }
+    });
+
+    // Full-Screen Modal Expansion with Back Button
+    if (agencyFullscreenBtn) {
+        agencyFullscreenBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const videoUrl = agencyFullscreenBtn.getAttribute('data-video-url') || (agencyVideo ? (agencyVideo.currentSrc || 'showreel.mp4') : 'showreel.mp4');
+            const title = agencyFullscreenBtn.getAttribute('data-video-title') || 'ORBX MEDIA Agency Reel';
+            openVideoModal(videoUrl, title, '9:16');
+        });
+    }
+}

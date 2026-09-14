@@ -101,10 +101,45 @@
             </div>
             <div class="about-content">
                 <div class="about-image-wrapper reveal">
-                    <div class="about-image glass-panel">
-                        <div class="about-emblem-container">
-                            <img src="orbx-logo.png" alt="ORBX MEDIA" class="about-logo-overlay">
-                            <div class="about-glow-orb"></div>
+                    <div class="about-video-card glass-panel" data-aspect="9:16">
+                        <div class="about-video-player-box">
+                            <video id="aboutAgencyVideo" class="about-agency-video" autoplay loop muted playsinline
+                                preload="auto" poster="">
+                                <source src="showreel.mp4" type="video/mp4">
+                                <source src="showreel.mp4.mp4" type="video/mp4">
+                                <source src="showreel.webm" type="video/webm">
+                                Your browser does not support the video tag.
+                            </video>
+
+                            <!-- Video Live Badge & Quick Controls -->
+                            <div class="about-video-badge">
+                                <span class="video-live-dot"></span>
+                            </div>
+
+                            <div class="about-video-floating-ctrls">
+                                <button class="about-video-ctrl-btn" id="agencyMuteBtn" aria-label="Toggle Sound"
+                                    title="Toggle Sound">
+                                    <i class="fas fa-volume-mute"></i>
+                                </button>
+                                <button class="about-video-ctrl-btn" id="agencyPlayPauseBtn" aria-label="Play or Pause"
+                                    title="Play / Pause">
+                                    <i class="fas fa-pause"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="about-video-meta">
+                            <div class="about-video-brand">
+                                <img src="orbx-logo.png" alt="ORBX MEDIA" class="about-video-logo">
+                                <div class="about-video-texts">
+                                    <span class="about-video-label">ORBX MEDIA</span>
+                                    <span class="about-video-subtitle">Vertical Reel Showcase</span>
+                                </div>
+                            </div>
+                            <button class="about-expand-btn video-trigger-btn" id="agencyFullscreenBtn"
+                                aria-label="Watch Full Screen" data-video-url="showreel.mp4"
+                                data-video-title="ORBX MEDIA Agency Reel" data-aspect="9:16">
+                                <i class="fas fa-expand"></i> Full Screen
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -402,6 +437,7 @@
                 <iframe id="videoIframe" src="" title="Video Player"
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                     referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                <video id="modalVideoElement" class="modal-video-element" controls playsinline></video>
             </div>
 
             <!-- Bottom Back Button for Handheld/Mobile Comfort -->
