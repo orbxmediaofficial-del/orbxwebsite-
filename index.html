@@ -14,9 +14,11 @@
     <link
         href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600&display=swap"
         rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="style.css?v=2.3">
     <!-- Font Awesome for Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- YouTube IFrame Player API for Slow-Motion Reels -->
+    <script src="https://www.youtube.com/iframe_api"></script>
 </head>
 
 <body>
@@ -69,8 +71,8 @@
                     class="social-icon" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
                 <a href="https://www.instagram.com/orbx_media/" target="_blank" rel="noopener noreferrer"
                     class="social-icon" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
-                <a href="https://www.behance.net/orbxmedia/projects" target="_blank" rel="noopener noreferrer"
-                    class="social-icon" aria-label="Behance"><i class="fab fa-behance"></i></a>
+                <a href="https://www.youtube.com/channel/UCH1ZJ2QjWTXAIRAuht5d67A" target="_blank" rel="noopener noreferrer"
+                    class="social-icon" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
                 <a href="https://www.facebook.com/profile.php?id=61590484026684" target="_blank"
                     rel="noopener noreferrer" class="social-icon" aria-label="Facebook"><i
                         class="fab fa-facebook-f"></i></a>
@@ -104,7 +106,7 @@
                     <div class="about-video-card glass-panel" data-aspect="9:16">
                         <div class="about-video-player-box">
                             <video id="aboutAgencyVideo" class="about-agency-video" autoplay loop muted playsinline
-                                preload="auto" poster="">
+                                preload="auto" poster="" width="292" height="519">
                                 <source src="showreel.mp4" type="video/mp4">
                                 <source src="showreel.mp4.mp4" type="video/mp4">
                                 <source src="showreel.webm" type="video/webm">
@@ -219,6 +221,26 @@
                         <li>InDesign</li>
                     </ul>
                 </div>
+                <div class="skill-category glass-card reveal">
+                    <div class="skill-icon"><i class="fas fa-brain"></i></div>
+                    <h3>AI Video Production</h3>
+                    <p>Pioneering generative AI workflows, neural cinematography, and virtual worlds.</p>
+                    <ul class="skill-tags">
+                        <li>Runway Gen-3</li>
+                        <li>Midjourney</li>
+                        <li>Kling & Luma AI</li>
+                    </ul>
+                </div>
+                <div class="skill-category glass-card reveal-delay-1">
+                    <div class="skill-icon"><i class="fas fa-code"></i></div>
+                    <h3>Web Development</h3>
+                    <p>Crafting high-performance modern web apps, portfolio architectures, and responsive UI.</p>
+                    <ul class="skill-tags">
+                        <li>HTML5 & Modern CSS</li>
+                        <li>JavaScript</li>
+                        <li>Responsive UI/UX</li>
+                    </ul>
+                </div>
             </div>
         </div>
     </section>
@@ -234,29 +256,43 @@
                 <div class="service-item reveal">
                     <div class="service-number">01</div>
                     <div class="service-info">
+                        <h3>AI Video Production</h3>
+                        <p>Next-generation AI-powered cinematography, virtual environments, synthetic media, and generative visual storytelling.</p>
+                    </div>
+                </div>
+                <div class="service-item reveal">
+                    <div class="service-number">02</div>
+                    <div class="service-info">
                         <h3>Commercial Video Production</h3>
                         <p>End-to-end editing for high-converting ads and promotional content.</p>
                     </div>
                 </div>
                 <div class="service-item reveal">
-                    <div class="service-number">02</div>
+                    <div class="service-number">03</div>
                     <div class="service-info">
                         <h3>Social Media Editing</h3>
                         <p>Fast-paced, engaging content optimized for YouTube, Instagram Reels, and TikTok.</p>
                     </div>
                 </div>
                 <div class="service-item reveal">
-                    <div class="service-number">03</div>
+                    <div class="service-number">04</div>
                     <div class="service-info">
                         <h3>Custom Motion Graphics</h3>
                         <p>Bespoke animations, lower thirds, logo reveals, and explainer videos.</p>
                     </div>
                 </div>
                 <div class="service-item reveal">
-                    <div class="service-number">04</div>
+                    <div class="service-number">05</div>
                     <div class="service-info">
                         <h3>Color Grading & Finishing</h3>
                         <p>Professional color correction and grading to give your footage a cinematic look.</p>
+                    </div>
+                </div>
+                <div class="service-item reveal">
+                    <div class="service-number">06</div>
+                    <div class="service-info">
+                        <h3>Website Building & Development</h3>
+                        <p>High-converting modern websites, portfolio showcases, and responsive digital experiences crafted for elite brands.</p>
                     </div>
                 </div>
             </div>
@@ -271,21 +307,21 @@
                 <div class="title-underline"></div>
             </div>
             <div class="projects-grid">
-                <!-- AI Video Production (16:9 Card matching others) -->
-                <div class="project-card reveal" data-video-id="iwWcWjnj020" data-video-title="AI Video Production"
-                    data-aspect="16:9" data-modal-aspect="9:16">
-                    <div class="project-image video-trigger"
-                        style="background: url('yt-thumb.jpg') center/cover no-repeat;">
-                        <div class="video-badge"><i class="fab fa-youtube"></i> 16:9</div>
-                        <button class="play-btn video-trigger-btn" aria-label="Play AI Video Production">
+                <!-- AI Video Production (Opens 6 Reels Sub-Gallery) -->
+                <div class="project-card reveal ai-gallery-trigger-card" id="aiVideoGalleryCard"
+                    data-aspect="16:9" role="button" tabindex="0" aria-label="Explore AI Video Production Gallery">
+                    <div class="project-image video-trigger">
+                        <div class="project-thumb-bg" style="background: url('yt-thumb.jpg') center/cover no-repeat; width: 100%; height: 100%; position: absolute; inset: 0;"></div>
+                        <div class="video-badge"><i class="fas fa-layer-group"></i> 6 AI Reels Collection</div>
+                        <div class="play-btn ai-gallery-play-btn" aria-label="Open AI Video Production Gallery">
                             <i class="fas fa-play"></i>
-                        </button>
+                        </div>
                     </div>
                     <div class="project-details">
                         <span class="project-category">AI Video Production</span>
                         <h3>AI Cinematic Video Showcase</h3>
-                        <button class="project-link video-trigger-btn" aria-label="Watch Video">
-                            Watch Full Screen <i class="fas fa-play-circle"></i>
+                        <button class="project-link ai-gallery-open-btn" aria-label="Explore AI Video Gallery">
+                            Explore 6 AI Reels <i class="fas fa-arrow-right"></i>
                         </button>
                     </div>
                 </div>
@@ -365,8 +401,8 @@
                             rel="noopener noreferrer" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
                         <a href="https://www.instagram.com/orbx_media/" target="_blank" rel="noopener noreferrer"
                             aria-label="Instagram"><i class="fab fa-instagram"></i></a>
-                        <a href="https://www.behance.net/orbxmedia/projects" target="_blank" rel="noopener noreferrer"
-                            aria-label="Behance"><i class="fab fa-behance"></i></a>
+                        <a href="https://www.youtube.com/channel/UCH1ZJ2QjWTXAIRAuht5d67A" target="_blank" rel="noopener noreferrer"
+                            aria-label="YouTube"><i class="fab fa-youtube"></i></a>
                         <a href="https://www.facebook.com/profile.php?id=61590484026684" target="_blank"
                             rel="noopener noreferrer" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
                     </div>
@@ -384,10 +420,12 @@
                     <div class="form-group">
                         <label for="service">Interested Service</label>
                         <select id="service" class="contact-select">
+                            <option value="AI Video Production">AI Video Production</option>
                             <option value="Commercial Video Production">Commercial Video Production</option>
                             <option value="Social Media Content Editing">Social Media Content Editing</option>
-                            <option value="3D Motion Graphics & VFX">3D Motion Graphics & VFX</option>
+                            <option value="Custom Motion Graphics & VFX">Custom Motion Graphics & VFX</option>
                             <option value="Cinematic Color Grading">Cinematic Color Grading</option>
+                            <option value="Website Building & Development">Website Building & Development</option>
                             <option value="General Production Inquiry">General Production Inquiry</option>
                         </select>
                     </div>
@@ -460,8 +498,8 @@
                     aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
                 <a href="https://www.instagram.com/orbx_media/" target="_blank" rel="noopener noreferrer"
                     aria-label="Instagram"><i class="fab fa-instagram"></i></a>
-                <a href="https://www.behance.net/orbxmedia/projects" target="_blank" rel="noopener noreferrer"
-                    aria-label="Behance"><i class="fab fa-behance"></i></a>
+                <a href="https://www.youtube.com/channel/UCH1ZJ2QjWTXAIRAuht5d67A" target="_blank" rel="noopener noreferrer"
+                    aria-label="YouTube"><i class="fab fa-youtube"></i></a>
                 <a href="https://www.facebook.com/profile.php?id=61590484026684" target="_blank"
                     rel="noopener noreferrer" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
             </div>
@@ -469,6 +507,171 @@
             <p class="footer-tagline">Cinematic Excellence & Dynamic Visual Innovation.</p>
         </div>
     </footer>
+
+    <!-- AI Video Production Sub-Gallery Modal (Portrait Instagram Reels View) -->
+    <div class="ai-gallery-modal" id="aiGalleryModal" aria-hidden="true" role="dialog">
+        <div class="ai-gallery-backdrop" id="aiGalleryBackdrop"></div>
+        <div class="ai-gallery-container">
+            <!-- Header Bar with Back Button -->
+            <div class="ai-gallery-header">
+                <button class="ai-gallery-back-btn" id="aiGalleryBackBtn" aria-label="Back to Featured Work">
+                    <i class="fas fa-arrow-left"></i>
+                    <span>Back to Featured Work</span>
+                </button>
+                <div class="ai-gallery-titles">
+                    <span class="ai-gallery-tag">EXCLUSIVE ARCHIVE</span>
+                    <h2 class="ai-gallery-heading">AI Video Production Gallery</h2>
+                    <p class="ai-gallery-subheading">Curated vertical reels playing in ambient slow-motion. Tap any reel to launch in full screen with high-fidelity audio.</p>
+                </div>
+                <button class="ai-gallery-close-btn" id="aiGalleryCloseBtn" aria-label="Close AI Gallery">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+
+            <!-- 6 Portrait Instagram Reels Style Boxes -->
+            <div class="ai-reels-grid">
+                <!-- Reel 1 -->
+                <div class="ai-reel-box glass-panel" data-video-id="CW33Gn8cU8w" data-video-title="AI Reel 01 • Cybernetic Vision" data-index="0">
+                    <div class="ai-reel-player-container">
+                        <div class="ai-reel-player-embed" id="aiPlayer0"></div>
+                        <div class="ai-reel-poster" style="background-image: url('https://img.youtube.com/vi/CW33Gn8cU8w/hqdefault.jpg');"></div>
+                        <div class="ai-reel-overlay">
+                            <div class="ai-reel-top-bar">
+                                <span class="ai-reel-num">01 / 06</span>
+                                <span class="ai-slowmo-pill"><span class="slowmo-pulse"></span> 0.5x Slow-Mo</span>
+                            </div>
+                            <div class="ai-reel-center-action">
+                                <span class="ai-reel-play-circle"><i class="fas fa-expand"></i></span>
+                            </div>
+                            <div class="ai-reel-bottom-info">
+                                <span class="ai-reel-category">Generative Cinema</span>
+                                <h4 class="ai-reel-title">Cybernetic Vision</h4>
+                                <span class="ai-reel-prompt-tag"><i class="fas fa-play"></i> Tap for Fullscreen & Audio</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Reel 2 -->
+                <div class="ai-reel-box glass-panel" data-video-id="bb1mzI0MaPE" data-video-title="AI Reel 02 • Neural Worldscapes" data-index="1">
+                    <div class="ai-reel-player-container">
+                        <div class="ai-reel-player-embed" id="aiPlayer1"></div>
+                        <div class="ai-reel-poster" style="background-image: url('https://img.youtube.com/vi/bb1mzI0MaPE/hqdefault.jpg');"></div>
+                        <div class="ai-reel-overlay">
+                            <div class="ai-reel-top-bar">
+                                <span class="ai-reel-num">02 / 06</span>
+                                <span class="ai-slowmo-pill"><span class="slowmo-pulse"></span> 0.5x Slow-Mo</span>
+                            </div>
+                            <div class="ai-reel-center-action">
+                                <span class="ai-reel-play-circle"><i class="fas fa-expand"></i></span>
+                            </div>
+                            <div class="ai-reel-bottom-info">
+                                <span class="ai-reel-category">Virtual Cinematography</span>
+                                <h4 class="ai-reel-title">Neural Worldscapes</h4>
+                                <span class="ai-reel-prompt-tag"><i class="fas fa-play"></i> Tap for Fullscreen & Audio</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Reel 3 -->
+                <div class="ai-reel-box glass-panel" data-video-id="cbFd-xK_hmc" data-video-title="AI Reel 03 • Fluid Morphologies" data-index="2">
+                    <div class="ai-reel-player-container">
+                        <div class="ai-reel-player-embed" id="aiPlayer2"></div>
+                        <div class="ai-reel-poster" style="background-image: url('https://img.youtube.com/vi/cbFd-xK_hmc/hqdefault.jpg');"></div>
+                        <div class="ai-reel-overlay">
+                            <div class="ai-reel-top-bar">
+                                <span class="ai-reel-num">03 / 06</span>
+                                <span class="ai-slowmo-pill"><span class="slowmo-pulse"></span> 0.5x Slow-Mo</span>
+                            </div>
+                            <div class="ai-reel-center-action">
+                                <span class="ai-reel-play-circle"><i class="fas fa-expand"></i></span>
+                            </div>
+                            <div class="ai-reel-bottom-info">
+                                <span class="ai-reel-category">Stylized Motion AI</span>
+                                <h4 class="ai-reel-title">Fluid Morphologies</h4>
+                                <span class="ai-reel-prompt-tag"><i class="fas fa-play"></i> Tap for Fullscreen & Audio</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Reel 4 -->
+                <div class="ai-reel-box glass-panel" data-video-id="-NAf_Bth1Q0" data-video-title="AI Reel 04 • Synthetic Humanoids" data-index="3">
+                    <div class="ai-reel-player-container">
+                        <div class="ai-reel-player-embed" id="aiPlayer3"></div>
+                        <div class="ai-reel-poster" style="background-image: url('https://img.youtube.com/vi/-NAf_Bth1Q0/hqdefault.jpg');"></div>
+                        <div class="ai-reel-overlay">
+                            <div class="ai-reel-top-bar">
+                                <span class="ai-reel-num">04 / 06</span>
+                                <span class="ai-slowmo-pill"><span class="slowmo-pulse"></span> 0.5x Slow-Mo</span>
+                            </div>
+                            <div class="ai-reel-center-action">
+                                <span class="ai-reel-play-circle"><i class="fas fa-expand"></i></span>
+                            </div>
+                            <div class="ai-reel-bottom-info">
+                                <span class="ai-reel-category">Character Concept AI</span>
+                                <h4 class="ai-reel-title">Synthetic Humanoids</h4>
+                                <span class="ai-reel-prompt-tag"><i class="fas fa-play"></i> Tap for Fullscreen & Audio</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Reel 5 -->
+                <div class="ai-reel-box glass-panel" data-video-id="iwWcWjnj020" data-video-title="AI Reel 05 • Cinematic AI Showcase" data-index="4">
+                    <div class="ai-reel-player-container">
+                        <div class="ai-reel-player-embed" id="aiPlayer4"></div>
+                        <div class="ai-reel-poster" style="background-image: url('https://img.youtube.com/vi/iwWcWjnj020/hqdefault.jpg');"></div>
+                        <div class="ai-reel-overlay">
+                            <div class="ai-reel-top-bar">
+                                <span class="ai-reel-num">05 / 06</span>
+                                <span class="ai-slowmo-pill"><span class="slowmo-pulse"></span> 0.5x Slow-Mo</span>
+                            </div>
+                            <div class="ai-reel-center-action">
+                                <span class="ai-reel-play-circle"><i class="fas fa-expand"></i></span>
+                            </div>
+                            <div class="ai-reel-bottom-info">
+                                <span class="ai-reel-category">Creative Commercial AI</span>
+                                <h4 class="ai-reel-title">Cinematic AI Showcase</h4>
+                                <span class="ai-reel-prompt-tag"><i class="fas fa-play"></i> Tap for Fullscreen & Audio</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Reel 6 -->
+                <div class="ai-reel-box glass-panel" data-video-id="WhaOZ298OqI" data-video-title="AI Reel 06 • Dimensions of Light" data-index="5">
+                    <div class="ai-reel-player-container">
+                        <div class="ai-reel-player-embed" id="aiPlayer5"></div>
+                        <div class="ai-reel-poster" style="background-image: url('https://img.youtube.com/vi/WhaOZ298OqI/hqdefault.jpg');"></div>
+                        <div class="ai-reel-overlay">
+                            <div class="ai-reel-top-bar">
+                                <span class="ai-reel-num">06 / 06</span>
+                                <span class="ai-slowmo-pill"><span class="slowmo-pulse"></span> 0.5x Slow-Mo</span>
+                            </div>
+                            <div class="ai-reel-center-action">
+                                <span class="ai-reel-play-circle"><i class="fas fa-expand"></i></span>
+                            </div>
+                            <div class="ai-reel-bottom-info">
+                                <span class="ai-reel-category">Future Film Aesthetics</span>
+                                <h4 class="ai-reel-title">Dimensions of Light</h4>
+                                <span class="ai-reel-prompt-tag"><i class="fas fa-play"></i> Tap for Fullscreen & Audio</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bottom Back Button for Easy Mobile Thumb Navigation -->
+            <div class="ai-gallery-bottom-bar">
+                <button class="ai-gallery-back-btn-bottom" id="aiGalleryBackBtnBottom">
+                    <i class="fas fa-arrow-left"></i>
+                    <span>Back to Featured Work</span>
+                </button>
+            </div>
+        </div>
+    </div>
 
     <script src="script.js"></script>
 </body>
