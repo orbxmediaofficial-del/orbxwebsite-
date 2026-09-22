@@ -6,57 +6,74 @@ const navItems = document.querySelectorAll('.nav-link');
 const currentYear = document.getElementById('year');
 
 // Set Current Year in Footer
-currentYear.textContent = new Date().getFullYear();
+if (currentYear) currentYear.textContent = new Date().getFullYear();
 
-// Navbar Scroll Effect
-window.addEventListener('scroll', () => {
-    if (window.scrollY > 50) {
-        navbar.classList.add('scrolled');
-    } else {
-        navbar.classList.remove('scrolled');
+// Navbar Scroll Effect (Optimized with RAF & Passive)
+let isNavbarScrolled = false;
+let navScrollRaf = null;
+
+const checkNavbarScroll = () => {
+    const shouldScroll = window.scrollY > 40;
+    if (shouldScroll !== isNavbarScrolled) {
+        isNavbarScrolled = shouldScroll;
+        if (navbar) {
+            navbar.classList.toggle('scrolled', isNavbarScrolled);
+        }
     }
-});
+    navScrollRaf = null;
+};
+
+window.addEventListener('scroll', () => {
+    if (!navScrollRaf) {
+        navScrollRaf = requestAnimationFrame(checkNavbarScroll);
+    }
+}, { passive: true });
+checkNavbarScroll();
 
 // Mobile Menu Toggle
-mobileBtn.addEventListener('click', () => {
-    navLinks.classList.toggle('active');
+if (mobileBtn && navLinks) {
+    mobileBtn.addEventListener('click', () => {
+        navLinks.classList.toggle('active');
 
-    // Change icon based on state
-    const icon = mobileBtn.querySelector('i');
-    if (navLinks.classList.contains('active')) {
-        icon.classList.remove('fa-bars');
-        icon.classList.add('fa-times');
-    } else {
-        icon.classList.remove('fa-times');
-        icon.classList.add('fa-bars');
-    }
-});
-
-// Close mobile menu when clicking a link
-navItems.forEach(item => {
-    item.addEventListener('click', () => {
-        navLinks.classList.remove('active');
+        // Change icon based on state
         const icon = mobileBtn.querySelector('i');
-        icon.classList.remove('fa-times');
-        icon.classList.add('fa-bars');
+        if (icon) {
+            if (navLinks.classList.contains('active')) {
+                icon.classList.remove('fa-bars');
+                icon.classList.add('fa-times');
+            } else {
+                icon.classList.remove('fa-times');
+                icon.classList.add('fa-bars');
+            }
+        }
     });
-});
 
-// Reveal Animations on Scroll using Intersection Observer
+    // Close mobile menu when clicking a link
+    navItems.forEach(item => {
+        item.addEventListener('click', () => {
+            navLinks.classList.remove('active');
+            const icon = mobileBtn.querySelector('i');
+            if (icon) {
+                icon.classList.remove('fa-times');
+                icon.classList.add('fa-bars');
+            }
+        });
+    });
+}
+
+// Reveal Animations on Scroll using Intersection Observer (Snappy & Fast)
 const revealElements = document.querySelectorAll('.reveal, .reveal-right');
 
 const revealOptions = {
-    threshold: 0.15,
-    rootMargin: "0px 0px -50px 0px"
+    threshold: 0.05,
+    rootMargin: "0px 0px -20px 0px"
 };
 
 const revealOnScroll = new IntersectionObserver(function (entries, observer) {
     entries.forEach(entry => {
-        if (!entry.isIntersecting) {
-            return;
-        } else {
+        if (entry.isIntersecting) {
             entry.target.classList.add('active');
-            observer.unobserve(entry.target); // Only animate once
+            observer.unobserve(entry.target);
         }
     });
 }, revealOptions);
@@ -65,32 +82,51 @@ revealElements.forEach(element => {
     revealOnScroll.observe(element);
 });
 
-// Add continuous subtle hover movements for cards using JS
-const glassCards = document.querySelectorAll('.glass-card, .project-card');
+// Silky, GPU-Accelerated 3D Card Tilt with RAF (Desktop only, avoids touch scroll jank)
+if (window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
+    const interactiveCards = document.querySelectorAll('.glass-card, .project-card, .ai-reel-box');
 
-glassCards.forEach(card => {
-    card.addEventListener('mousemove', (e) => {
-        const rect = card.getBoundingClientRect();
-        const x = e.clientX - rect.left;
-        const y = e.clientY - rect.top;
+    interactiveCards.forEach(card => {
+        let rect = null;
+        let tiltRaf = null;
 
-        // Very subtle 3D tilt effect
-        const centerX = rect.width / 2;
-        const centerY = rect.height / 2;
+        const handleMove = (e) => {
+            if (!rect) rect = card.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
 
-        const tiltX = (y - centerY) / 20;
-        const tiltY = (centerX - x) / 20;
+            const centerX = rect.width / 2;
+            const centerY = rect.height / 2;
 
-        card.style.transform = `perspective(1000px) rotateX(${tiltX}deg) rotateY(${tiltY}deg) translateY(-8px)`;
+            const tiltX = ((y - centerY) / centerY) * 4.5;
+            const tiltY = ((centerX - x) / centerX) * 4.5;
+
+            card.style.transform = `perspective(1000px) rotateX(${tiltX.toFixed(2)}deg) rotateY(${tiltY.toFixed(2)}deg) translateY(-6px)`;
+            tiltRaf = null;
+        };
+
+        card.addEventListener('mouseenter', () => {
+            rect = card.getBoundingClientRect();
+            card.style.transition = 'transform 0.12s ease-out';
+        });
+
+        card.addEventListener('mousemove', (e) => {
+            if (!tiltRaf) {
+                tiltRaf = requestAnimationFrame(() => handleMove(e));
+            }
+        });
+
+        card.addEventListener('mouseleave', () => {
+            if (tiltRaf) {
+                cancelAnimationFrame(tiltRaf);
+                tiltRaf = null;
+            }
+            rect = null;
+            card.style.transition = 'transform 0.28s cubic-bezier(0.16, 1, 0.3, 1)';
+            card.style.transform = '';
+        });
     });
-
-    card.addEventListener('mouseleave', () => {
-        card.style.transform = `perspective(1000px) rotateX(0deg) rotateY(0deg) translateY(0)`;
-        setTimeout(() => {
-            card.style.transition = 'var(--transition-normal)'; // Restore original transition overriden by JS inline style
-        }, 100);
-    });
-});
+}
 
 // WhatsApp Form Submission Handler
 const whatsappForm = document.getElementById('whatsapp-form');
@@ -350,12 +386,7 @@ if (agencyVideo) {
     window.addEventListener('load', startPlayback);
     document.addEventListener('DOMContentLoaded', startPlayback);
 
-    // Keep it playing continuously when the visitor scrolls through the page
-    window.addEventListener('scroll', () => {
-        if (agencyVideo.paused && !isManuallyPaused) {
-            startPlayback();
-        }
-    }, { passive: true });
+
 
     // IntersectionObserver to guarantee continuous playback whenever in/near viewport
     if ('IntersectionObserver' in window) {
