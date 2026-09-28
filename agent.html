@@ -970,9 +970,13 @@
                     <i class="fas fa-external-link-alt"></i>
                     <span>Main Site</span>
                 </a>
-                <button type="button" class="btn-save-sync" onclick="handleSaveAndSync()">
+                <button type="button" class="btn-agent-nav btn-secondary-agent" onclick="handleSaveAndSync()" title="Save changes in this browser">
                     <i class="fas fa-save"></i>
-                    <span>Save & Publish</span>
+                    <span>Save Locally</span>
+                </button>
+                <button type="button" class="btn-save-sync" onclick="openLiveSyncModal()" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%);">
+                    <i class="fas fa-globe"></i>
+                    <span>Publish Live (All Devices)</span>
                 </button>
                 <button type="button" class="btn-agent-nav btn-secondary-agent" id="agentLockBtn" onclick="agentLogout()" title="Lock Agent Console" style="display: none; color: #f87171;">
                     <i class="fas fa-lock"></i>
@@ -991,8 +995,7 @@
                     <h1>Reels Content <span class="gradient-text">Studio & Agent Portal</span></h1>
                     <p>
                         Easily change existing videos or add new vertical videos to the AI Reels section.
-                        Changes sync instantly to both the main home page sub-gallery and the dedicated AI Video
-                        Production page.
+                        Use <strong>"Publish Live (All Devices)"</strong> to automatically deploy changes across all phones, laptops, and visitors worldwide.
                     </p>
                 </div>
             </div>
@@ -1011,9 +1014,9 @@
                         </span>
                     </div>
                     <div class="stat-item">
-                        <span class="stat-label">Full Screen Overlay</span>
+                        <span class="stat-label">Live Deployment</span>
                         <span class="stat-value" style="color: var(--gold-light); font-size: 0.95rem;">
-                            <i class="fas fa-check-circle"></i> Clean (Button Removed)
+                            <i class="fab fa-github"></i> GitHub Pages Auto-Sync
                         </span>
                     </div>
                 </div>
@@ -1022,6 +1025,10 @@
                     <button type="button" class="btn-add-reel" onclick="openAddReelModal()">
                         <i class="fas fa-plus"></i>
                         <span>Add Reel Video</span>
+                    </button>
+                    <button type="button" class="btn-save-sync" onclick="openLiveSyncModal()" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%);">
+                        <i class="fas fa-globe"></i>
+                        <span>Publish to All Devices</span>
                     </button>
                     <button type="button" class="btn-secondary-agent" onclick="openPresetsModal()">
                         <i class="fas fa-sparkles"></i>
@@ -1154,6 +1161,65 @@
             </div>
             <div style="display: flex; justify-content: flex-end; gap: 10px;">
                 <button type="button" class="btn-secondary-agent" onclick="closeModal('exportModal')">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- LIVE SYNC TO ALL DEVICES MODAL -->
+    <div class="agent-modal" id="liveSyncModal">
+        <div class="agent-modal-card" style="max-width: 680px;">
+            <div class="modal-header">
+                <h3><i class="fas fa-globe" style="color: #10b981;"></i> Publish Live to All Devices</h3>
+                <button type="button" class="modal-close" onclick="closeModal('liveSyncModal')">&times;</button>
+            </div>
+            
+            <p style="font-size: 0.88rem; color: var(--text-secondary); line-height: 1.5;">
+                Because ORBX MEDIA is hosted as a static website on GitHub Pages (<strong style="color:#ffffff;">orbxmedia.in</strong>), 
+                saving locally only updates your current device. Use one of the options below to deploy changes live across <strong>all phones, laptops, and visitors worldwide</strong>:
+            </p>
+
+            <!-- Option 1: 1-Click GitHub Auto-Publish -->
+            <div style="background: rgba(22, 16, 14, 0.95); border: 1.5px solid rgba(16, 185, 129, 0.45); border-radius: 14px; padding: 18px; display: flex; flex-direction: column; gap: 10px;">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <strong style="color: #a7f3d0; font-size: 0.95rem;"><i class="fab fa-github"></i> Method 1: Automatic GitHub Publish (Recommended)</strong>
+                    <span style="font-size: 0.7rem; background: rgba(16, 185, 129, 0.2); color: #10b981; padding: 2px 8px; border-radius: 12px; font-weight: 700;">Zero Terminal</span>
+                </div>
+                <p style="font-size: 0.8rem; color: #b8b0a9; margin: 0; line-height: 1.4;">
+                    Enter your GitHub Personal Access Token once. Agent Studio will automatically commit your new reels directly to GitHub, and GitHub Pages will update your live site across all devices!
+                </p>
+                <div class="input-group">
+                    <label style="font-size: 0.72rem; color: var(--copper-light);">GitHub Personal Access Token (PAT with 'repo' scope)</label>
+                    <input type="password" id="githubTokenInput" class="agent-input" placeholder="ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx">
+                </div>
+                <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+                    <a href="https://github.com/settings/tokens/new?scopes=repo&description=ORBX%20Agent%20Studio" target="_blank" rel="noopener noreferrer" style="font-size: 0.76rem; color: var(--gold-light); text-decoration: underline;">
+                        <i class="fas fa-external-link-alt"></i> Create free token on GitHub (30 seconds)
+                    </a>
+                    <button type="button" class="btn-save-sync" onclick="publishToGitHub()" style="padding: 10px 18px; font-size: 0.88rem;">
+                        <i class="fas fa-rocket"></i> Publish to Live Website
+                    </button>
+                </div>
+                <div id="githubPublishStatus" style="display: none; font-size: 0.82rem; margin-top: 6px;"></div>
+            </div>
+
+            <!-- Option 2: 1-Click File Download & Git Command -->
+            <div style="background: rgba(22, 16, 14, 0.95); border: 1px solid rgba(246, 200, 105, 0.25); border-radius: 14px; padding: 18px; display: flex; flex-direction: column; gap: 10px;">
+                <strong style="color: var(--gold-light); font-size: 0.92rem;"><i class="fas fa-file-code"></i> Method 2: Download Updated reels-data.js File</strong>
+                <p style="font-size: 0.8rem; color: #b8b0a9; margin: 0;">
+                    Download the pre-built JavaScript file and replace <code>reels-data.js</code> in your website folder, then push via Git:
+                </p>
+                <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                    <button type="button" class="btn-secondary-agent" onclick="downloadReelsFile()" style="padding: 8px 16px; font-size: 0.85rem;">
+                        <i class="fas fa-download"></i> Download reels-data.js
+                    </button>
+                    <button type="button" class="btn-secondary-agent" onclick="copyGitPushCmd()" style="padding: 8px 16px; font-size: 0.85rem;">
+                        <i class="fas fa-terminal"></i> Copy Git Push Command
+                    </button>
+                </div>
+            </div>
+
+            <div style="display: flex; justify-content: flex-end;">
+                <button type="button" class="btn-secondary-agent" onclick="closeModal('liveSyncModal')">Close</button>
             </div>
         </div>
     </div>
@@ -1604,6 +1670,132 @@
             toastTimeout = setTimeout(() => {
                 toast.classList.remove('active');
             }, 4000);
+        }
+
+        // =========================================
+        // LIVE SYNC TO ALL DEVICES (GitHub & Cloud)
+        // =========================================
+        const GITHUB_REPO = "orbxmediaofficial-del/orbxwebsite-";
+        const GITHUB_FILE_PATH = "reels-data.js";
+        const GITHUB_BRANCH = "main";
+        const GITHUB_TOKEN_KEY = "orbx_github_token";
+
+        function openLiveSyncModal() {
+            const tokenInput = document.getElementById('githubTokenInput');
+            if (tokenInput) {
+                tokenInput.value = localStorage.getItem(GITHUB_TOKEN_KEY) || '';
+            }
+            const statusEl = document.getElementById('githubPublishStatus');
+            if (statusEl) statusEl.style.display = 'none';
+            document.getElementById('liveSyncModal').classList.add('active');
+        }
+
+        async function publishToGitHub() {
+            const tokenInput = document.getElementById('githubTokenInput');
+            const statusEl = document.getElementById('githubPublishStatus');
+            const token = tokenInput ? tokenInput.value.trim() : '';
+
+            if (!token) {
+                if (statusEl) {
+                    statusEl.style.display = 'block';
+                    statusEl.innerHTML = '<span style="color:#f87171;"><i class="fas fa-exclamation-triangle"></i> Please enter your GitHub Personal Access Token.</span>';
+                }
+                return;
+            }
+
+            localStorage.setItem(GITHUB_TOKEN_KEY, token);
+
+            try {
+                if (statusEl) {
+                    statusEl.style.display = 'block';
+                    statusEl.innerHTML = '<span style="color:var(--gold-light);"><i class="fas fa-spinner fa-spin"></i> Connecting to GitHub repository...</span>';
+                }
+
+                // 1. Fetch current file sha from GitHub
+                let sha = null;
+                try {
+                    const getRes = await fetch(`https://api.github.com/repos/${GITHUB_REPO}/contents/${GITHUB_FILE_PATH}?ref=${GITHUB_BRANCH}`, {
+                        headers: {
+                            'Authorization': `token ${token}`,
+                            'Accept': 'application/vnd.github.v3+json'
+                        }
+                    });
+                    if (getRes.ok) {
+                        const getData = await getRes.json();
+                        sha = getData.sha;
+                    }
+                } catch (e) { }
+
+                if (statusEl) {
+                    statusEl.innerHTML = '<span style="color:var(--gold-light);"><i class="fas fa-spinner fa-spin"></i> Committing updated reels to GitHub...</span>';
+                }
+
+                // 2. Generate updated file content with the working reels as DEFAULT_REELS
+                const newContent = generateReelsDataJsContent(workingReels);
+                const encodedContent = btoa(unescape(encodeURIComponent(newContent)));
+
+                // 3. Send PUT request to GitHub API
+                const payload = {
+                    message: `Update AI reels showcase via Agent Studio [skip ci]`,
+                    content: encodedContent,
+                    branch: GITHUB_BRANCH
+                };
+                if (sha) payload.sha = sha;
+
+                const putRes = await fetch(`https://api.github.com/repos/${GITHUB_REPO}/contents/${GITHUB_FILE_PATH}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Authorization': `token ${token}`,
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/vnd.github.v3+json'
+                    },
+                    body: JSON.stringify(payload)
+                });
+
+                if (putRes.ok) {
+                    saveActiveReels(workingReels);
+                    if (statusEl) {
+                        statusEl.innerHTML = `
+                            <div style="background: rgba(16, 185, 129, 0.15); border: 1px solid #10b981; padding: 12px; border-radius: 8px; color: #a7f3d0; margin-top: 8px;">
+                                <i class="fas fa-check-circle" style="color: #10b981;"></i> <strong>Published successfully to GitHub!</strong>
+                                <div style="font-size: 0.78rem; margin-top: 4px; color: #e2e8f0;">
+                                    GitHub Pages is deploying your changes. Within ~30-60 seconds, all devices and visitors across the world will see your new reels on <strong>orbxmedia.in</strong>!
+                                </div>
+                            </div>`;
+                    }
+                    showToast('Published live to GitHub! Updating all devices...');
+                } else {
+                    const errData = await putRes.json();
+                    if (statusEl) {
+                        statusEl.innerHTML = `<span style="color:#f87171;"><i class="fas fa-times-circle"></i> Error from GitHub: ${errData.message || putRes.statusText}</span>`;
+                    }
+                }
+            } catch (err) {
+                if (statusEl) {
+                    statusEl.innerHTML = `<span style="color:#f87171;"><i class="fas fa-times-circle"></i> Connection failed: ${err.message}</span>`;
+                }
+            }
+        }
+
+        function downloadReelsFile() {
+            const content = generateReelsDataJsContent(workingReels);
+            const blob = new Blob([content], { type: 'application/javascript' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'reels-data.js';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            showToast('Downloaded reels-data.js! Drop it into your website folder.');
+        }
+
+        function copyGitPushCmd() {
+            const cmd = 'git add reels-data.js && git commit -m "Update AI reels showcase" && git push origin main';
+            navigator.clipboard.writeText(cmd).then(() => {
+                showToast('Copied git push command to clipboard!');
+            });
         }
 
         // Initialize on load
