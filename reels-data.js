@@ -41,10 +41,10 @@ const DEFAULT_REELS = [
         "poster": "https://img.youtube.com/vi/WhaOZ298OqI/hqdefault.jpg"
     },
     {
-        "id": "uxc10rEl_Bw",
-        "title": "Ai Auto Biography",
+        "id": "qRqTHi2KHPw",
+        "title": "Ai Presentation Model",
         "category": "Generative Cinema",
-        "poster": "https://img.youtube.com/vi/uxc10rEl_Bw/hqdefault.jpg"
+        "poster": "https://img.youtube.com/vi/qRqTHi2KHPw/hqdefault.jpg"
     }
 ];
 
