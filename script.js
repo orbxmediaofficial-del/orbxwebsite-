@@ -461,8 +461,26 @@ const aiGalleryBackBtn = document.getElementById('aiGalleryBackBtn');
 const aiGalleryBackBtnBottom = document.getElementById('aiGalleryBackBtnBottom');
 const aiGalleryCloseBtn = document.getElementById('aiGalleryCloseBtn');
 const aiGalleryBackdrop = document.getElementById('aiGalleryBackdrop');
-const aiReelBoxes = document.querySelectorAll('.ai-reel-box');
 const aiGalleryTriggerCard = document.getElementById('aiVideoGalleryCard');
+
+// Check for customized reels saved via Agent Portal
+function syncHomeAgentReels() {
+    try {
+        const custom = localStorage.getItem('orbx_custom_reels');
+        if (custom && typeof renderReelsGrid === 'function') {
+            renderReelsGrid('.ai-reels-grid', false);
+        }
+    } catch (e) { }
+}
+syncHomeAgentReels();
+window.addEventListener('orbx_reels_updated', () => {
+    syncHomeAgentReels();
+    setTimeout(() => {
+        aiYtPlayers = [];
+        initAiSlowMoPlayers();
+        resumeAiSlowMoPlayers();
+    }, 300);
+});
 
 let aiYtPlayers = [];
 let isAiYtApiReady = false;
@@ -497,7 +515,8 @@ if (window.YT && window.YT.Player) {
 function initAiSlowMoPlayers() {
     if (!window.YT || !window.YT.Player) return;
 
-    aiReelBoxes.forEach((box, index) => {
+    const currentReelBoxes = document.querySelectorAll('.ai-reel-box');
+    currentReelBoxes.forEach((box, index) => {
         const videoId = box.getAttribute('data-video-id');
         const iframe = box.querySelector('iframe');
 
@@ -616,15 +635,16 @@ document.querySelectorAll('.ai-gallery-open-btn, .ai-gallery-play-btn').forEach(
     btn.addEventListener('click', openAiGallery);
 });
 
-// Click triggers for all 6 portrait reel boxes inside the sub-gallery
-aiReelBoxes.forEach(box => {
-    box.addEventListener('click', (e) => {
+// Click triggers for portrait reel boxes inside the sub-gallery (supports dynamically added reels)
+document.addEventListener('click', (e) => {
+    const box = e.target.closest('.ai-reel-box');
+    if (box && !e.target.closest('button, a')) {
         e.preventDefault();
         e.stopPropagation();
         const videoId = box.getAttribute('data-video-id');
         const title = box.getAttribute('data-video-title') || 'AI Video Production Reel';
         openReelFullscreen(videoId, title);
-    });
+    }
 });
 
 // Back & Close buttons
