@@ -45,6 +45,36 @@ const DEFAULT_REELS = [
         "title": "Ai Presentation Model",
         "category": "Generative Cinema",
         "poster": "https://img.youtube.com/vi/qRqTHi2KHPw/hqdefault.jpg"
+    },
+    {
+        "id": "E4YZjyuEl88",
+        "title": "Ai Presentation Model",
+        "category": "Generative Cinema",
+        "poster": "https://img.youtube.com/vi/E4YZjyuEl88/hqdefault.jpg"
+    },
+    {
+        "id": "CzdGtCWhEHo",
+        "title": "Ai Presentation Model",
+        "category": "Generative Cinema",
+        "poster": "https://img.youtube.com/vi/CzdGtCWhEHo/hqdefault.jpg"
+    },
+    {
+        "id": "UOISqxwtnS0",
+        "title": "Ai Presentation Model",
+        "category": "Generative Cinema",
+        "poster": "https://img.youtube.com/vi/UOISqxwtnS0/hqdefault.jpg"
+    },
+    {
+        "id": "0B_WWYC0F1g",
+        "title": "Ai Presentation Model",
+        "category": "Generative Cinema",
+        "poster": "https://img.youtube.com/vi/0B_WWYC0F1g/hqdefault.jpg"
+    },
+    {
+        "id": "dxV7kj-M0SM",
+        "title": "Ai Presentation Model",
+        "category": "Generative Cinema",
+        "poster": "https://img.youtube.com/vi/dxV7kj-M0SM/hqdefault.jpg"
     }
 ];
 
@@ -159,26 +189,23 @@ function resetActiveReels() {
     }
 }
 
-/**
- * Generates raw HTML for reels grid to bake directly into HTML files or inject dynamically.
- */
 function generateReelsHtml(customReels, isSubgalleryPage = false) {
-    const list = customReels || (typeof getActiveReels === 'function' ? getActiveReels() : DEFAULT_REELS);
-    const totalCount = list.length;
-    let html = '';
-    list.forEach((reel, index) => {
-        const numStr = String(index + 1).padStart(2, '0');
-        const totalStr = String(totalCount).padStart(2, '0');
-        const videoId = extractYouTubeId(reel.id);
-        const titleSafe = (reel.title || ('AI Reel ' + numStr)).replace(/"/g, '&quot;');
-        const categorySafe = (reel.category || 'Generative Cinema').replace(/"/g, '&quot;');
-        const posterUrl = reel.poster || ('https://img.youtube.com/vi/' + videoId + '/hqdefault.jpg');
-        const clickHandler = isSubgalleryPage
-            ? "openAiReelModal('" + videoId + "', '" + titleSafe.replace(/'/g, "\\'") + "')"
-            : "openReelFullscreen('" + videoId + "', '" + titleSafe.replace(/'/g, "\\'") + "')";
-        const revealClass = isSubgalleryPage ? ' reveal' : '';
+            const list = customReels || (typeof workingReels !== 'undefined' ? workingReels : (typeof getActiveReels === 'function' ? getActiveReels() : []));
+            const totalCount = list.length;
+            let html = '';
+            list.forEach((reel, index) => {
+                const numStr = String(index + 1).padStart(2, '0');
+                const totalStr = String(totalCount).padStart(2, '0');
+                const videoId = extractYouTubeId(reel.id);
+                const titleSafe = (reel.title || ('AI Reel ' + numStr)).replace(/"/g, '&quot;');
+                const categorySafe = (reel.category || 'Generative Cinema').replace(/"/g, '&quot;');
+                const posterUrl = reel.poster || ('https://img.youtube.com/vi/' + videoId + '/hqdefault.jpg');
+                const clickHandler = isSubgalleryPage
+                    ? "openAiReelModal('" + videoId + "', '" + titleSafe.replace(/'/g, "\\'") + "')"
+                    : "openReelFullscreen('" + videoId + "', '" + titleSafe.replace(/'/g, "\\'") + "')";
+                const revealClass = isSubgalleryPage ? ' reveal' : '';
 
-        html += `
+                html += `
                 <!-- Reel ${index + 1} -->
                 <div class="ai-reel-box glass-panel${revealClass}" data-video-id="${videoId}"
                     data-video-title="${titleSafe}" data-index="${index}"
@@ -205,27 +232,69 @@ function generateReelsHtml(customReels, isSubgalleryPage = false) {
                         </div>
                     </div>
                 </div>`;
-    });
-    return html;
-}
+            });
+            return html;
+        }
 
 function renderReelsGrid(selector = '.ai-reels-grid', isSubgalleryPage = false) {
     const gridContainer = document.querySelector(selector);
     if (!gridContainer) return;
+
     const reels = getActiveReels();
-    gridContainer.innerHTML = generateReelsHtml(reels, isSubgalleryPage);
+    const totalCount = reels.length;
+
+    let html = '';
+    reels.forEach((reel, index) => {
+        const numStr = String(index + 1).padStart(2, '0');
+        const totalStr = String(totalCount).padStart(2, '0');
+        const videoId = extractYouTubeId(reel.id);
+        const titleSafe = (reel.title || ('AI Reel ' + numStr)).replace(/"/g, '&quot;');
+        const categorySafe = (reel.category || 'Generative Cinema').replace(/"/g, '&quot;');
+        const posterUrl = reel.poster || ('https://img.youtube.com/vi/' + videoId + '/hqdefault.jpg');
+        const clickHandler = isSubgalleryPage
+            ? "openAiReelModal('" + videoId + "', '" + titleSafe.replace(/'/g, "\\'") + "')"
+            : "openReelFullscreen('" + videoId + "', '" + titleSafe.replace(/'/g, "\\'") + "')";
+
+        html += `
+        <!-- Reel ${index + 1} -->
+        <div class="ai-reel-box glass-panel reveal" data-video-id="${videoId}"
+            data-video-title="${titleSafe}" data-index="${index}"
+            onclick="${clickHandler}">
+            <div class="ai-reel-player-container">
+                <div class="ai-reel-player-embed" id="aiPlayer${index}">
+                    <iframe id="aiReelIframe${index}" loading="lazy"
+                        src="https://www.youtube-nocookie.com/embed/${videoId}?autoplay=1&mute=1&controls=0&loop=1&playlist=${videoId}&playsinline=1&modestbranding=1&rel=0&iv_load_policy=3&disablekb=1&enablejsapi=1"
+                        title="${titleSafe}"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                        allowfullscreen></iframe>
+                </div>
+                <div class="ai-reel-poster" style="background-image: url('${posterUrl}');"></div>
+                <div class="ai-reel-overlay">
+                    <div class="ai-reel-top-bar">
+                        <span class="ai-reel-num">${numStr} / ${totalStr}</span>
+                        <span class="ai-slowmo-pill"><span class="slowmo-pulse"></span> 0.5x Slow-Mo</span>
+                    </div>
+                    <!-- Full screen button removed from video boxes for unobstructed cinematic view -->
+                    <div class="ai-reel-bottom-info">
+                        <span class="ai-reel-category">${categorySafe}</span>
+                        <h4 class="ai-reel-title">${titleSafe}</h4>
+                        <span class="ai-reel-prompt-tag"><i class="fas fa-play"></i> Tap to Play with Sound</span>
+                    </div>
+                </div>
+            </div>
+        </div>`;
+    });
+
+    gridContainer.innerHTML = html;
 }
 
-/**
- * Standalone JavaScript generator for reels-data.js
- */
 function generateReelsDataJsContent(customReels) {
-    const list = customReels || (typeof getActiveReels === 'function' ? getActiveReels() : DEFAULT_REELS);
-    const formatted = JSON.stringify(list, null, 4);
-    const presets = typeof PRESET_REELS !== 'undefined' ? PRESET_REELS : list;
-    const presetsFormatted = JSON.stringify(presets, null, 4);
+            const list = customReels || (typeof workingReels !== 'undefined' ? workingReels : (typeof getActiveReels === 'function' ? getActiveReels() : []));
+            const formatted = JSON.stringify(list, null, 4);
+            const presets = typeof PRESET_REELS !== 'undefined' ? PRESET_REELS : list;
+            const presetsFormatted = JSON.stringify(presets, null, 4);
 
-    return `/**
+            return `/**
  * ORBX MEDIA - AI Video Production Reels Central Data & Sync Controller
  * Generated by Agent Studio for live deployment across all devices.
  */
@@ -265,7 +334,7 @@ window.generateReelsHtml = generateReelsHtml;
 window.renderReelsGrid = renderReelsGrid;
 window.generateReelsDataJsContent = generateReelsDataJsContent;
 `;
-}
+        }
 
 // Global exposure
 window.DEFAULT_REELS = DEFAULT_REELS;
