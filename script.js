@@ -463,11 +463,10 @@ const aiGalleryCloseBtn = document.getElementById('aiGalleryCloseBtn');
 const aiGalleryBackdrop = document.getElementById('aiGalleryBackdrop');
 const aiGalleryTriggerCard = document.getElementById('aiVideoGalleryCard');
 
-// Check for customized reels saved via Agent Portal
+// Sync and render reels dynamically from reels-data.js / localStorage
 function syncHomeAgentReels() {
     try {
-        const custom = localStorage.getItem('orbx_custom_reels');
-        if (custom && typeof renderReelsGrid === 'function') {
+        if (typeof renderReelsGrid === 'function') {
             renderReelsGrid('.ai-reels-grid', false);
         }
     } catch (e) { }

@@ -1175,17 +1175,17 @@
             
             <p style="font-size: 0.88rem; color: var(--text-secondary); line-height: 1.5;">
                 Because ORBX MEDIA is hosted as a static website on GitHub Pages (<strong style="color:#ffffff;">orbxmedia.in</strong>), 
-                saving locally only updates your current device. Use one of the options below to deploy changes live across <strong>all phones, laptops, and visitors worldwide</strong>:
+                saving locally only updates your current device. Use <strong>Method 1</strong> to automatically bake changes into the <strong>HTML files, JavaScript data, and CSS versioning</strong> across <strong>all phones, laptops, and visitors worldwide</strong>:
             </p>
 
-            <!-- Option 1: 1-Click GitHub Auto-Publish -->
+            <!-- Option 1: 1-Click Multi-File Auto-Publish -->
             <div style="background: rgba(22, 16, 14, 0.95); border: 1.5px solid rgba(16, 185, 129, 0.45); border-radius: 14px; padding: 18px; display: flex; flex-direction: column; gap: 10px;">
                 <div style="display: flex; justify-content: space-between; align-items: center;">
-                    <strong style="color: #a7f3d0; font-size: 0.95rem;"><i class="fab fa-github"></i> Method 1: Automatic GitHub Publish (Recommended)</strong>
-                    <span style="font-size: 0.7rem; background: rgba(16, 185, 129, 0.2); color: #10b981; padding: 2px 8px; border-radius: 12px; font-weight: 700;">Connected</span>
+                    <strong style="color: #a7f3d0; font-size: 0.95rem;"><i class="fab fa-github"></i> Method 1: Automatic Multi-File Publish (Recommended)</strong>
+                    <span style="font-size: 0.7rem; background: rgba(16, 185, 129, 0.2); color: #10b981; padding: 2px 8px; border-radius: 12px; font-weight: 700;">Live Sync Ready</span>
                 </div>
                 <p style="font-size: 0.8rem; color: #b8b0a9; margin: 0; line-height: 1.4;">
-                    Connected to <strong>orbxmediaofficial-del/orbxwebsite-</strong>. One click commits your updated reels directly to GitHub, and GitHub Pages will deploy live across all devices!
+                    One click updates <strong>index.html</strong>, <strong>ai-video-production.html</strong>, and <strong>reels-data.js</strong> directly on GitHub with fresh CSS & script cache busters, and triggers a live deployment so every device worldwide sees your changes immediately.
                 </p>
                 <div class="input-group">
                     <label style="font-size: 0.72rem; color: var(--copper-light);">GitHub Personal Access Token (Authenticated)</label>
@@ -1202,18 +1202,27 @@
                 <div id="githubPublishStatus" style="display: none; font-size: 0.82rem; margin-top: 6px;"></div>
             </div>
 
-            <!-- Option 2: 1-Click File Download & Git Command -->
+            <!-- Option 2: 1-Click File Downloads & Git Command -->
             <div style="background: rgba(22, 16, 14, 0.95); border: 1px solid rgba(246, 200, 105, 0.25); border-radius: 14px; padding: 18px; display: flex; flex-direction: column; gap: 10px;">
-                <strong style="color: var(--gold-light); font-size: 0.92rem;"><i class="fas fa-file-code"></i> Method 2: Download Updated reels-data.js File</strong>
+                <strong style="color: var(--gold-light); font-size: 0.92rem;"><i class="fas fa-file-code"></i> Method 2: Download Updated Files (HTML & Java)</strong>
                 <p style="font-size: 0.8rem; color: #b8b0a9; margin: 0;">
-                    Download the pre-built JavaScript file and replace <code>reels-data.js</code> in your website folder, then push via Git:
+                    Download the pre-generated files to replace in your local website folder:
                 </p>
-                <div style="display: flex; gap: 10px; flex-wrap: wrap;">
-                    <button type="button" class="btn-secondary-agent" onclick="downloadReelsFile()" style="padding: 8px 16px; font-size: 0.85rem;">
-                        <i class="fas fa-download"></i> Download reels-data.js
+                <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                    <button type="button" class="btn-secondary-agent" onclick="downloadAllFiles()" style="padding: 8px 14px; font-size: 0.82rem; background: rgba(246, 200, 105, 0.15); border-color: var(--gold-primary); color: #ffffff;">
+                        <i class="fas fa-download"></i> Download All Files
                     </button>
-                    <button type="button" class="btn-secondary-agent" onclick="copyGitPushCmd()" style="padding: 8px 16px; font-size: 0.85rem;">
-                        <i class="fas fa-terminal"></i> Copy Git Push Command
+                    <button type="button" class="btn-secondary-agent" onclick="downloadReelsFile()" style="padding: 8px 12px; font-size: 0.82rem;">
+                        <i class="fas fa-file-code"></i> reels-data.js
+                    </button>
+                    <button type="button" class="btn-secondary-agent" onclick="downloadIndexHtml()" style="padding: 8px 12px; font-size: 0.82rem;">
+                        <i class="fas fa-file-code"></i> index.html
+                    </button>
+                    <button type="button" class="btn-secondary-agent" onclick="downloadAiPageHtml()" style="padding: 8px 12px; font-size: 0.82rem;">
+                        <i class="fas fa-file-code"></i> ai-video-production.html
+                    </button>
+                    <button type="button" class="btn-secondary-agent" onclick="copyGitPushCmd()" style="padding: 8px 12px; font-size: 0.82rem;">
+                        <i class="fas fa-terminal"></i> Copy Git Command
                     </button>
                 </div>
             </div>
@@ -1756,8 +1765,86 @@
         } catch (e) {}
 
         /**
+         * Standalone HTML generator for reels grid.
+         * Used to bake updated reels directly into index.html and ai-video-production.html.
+         */
+        function generateReelsHtml(customReels, isSubgalleryPage = false) {
+            const list = customReels || (typeof workingReels !== 'undefined' ? workingReels : (typeof getActiveReels === 'function' ? getActiveReels() : []));
+            const totalCount = list.length;
+            let html = '';
+            list.forEach((reel, index) => {
+                const numStr = String(index + 1).padStart(2, '0');
+                const totalStr = String(totalCount).padStart(2, '0');
+                const videoId = extractYouTubeId(reel.id);
+                const titleSafe = (reel.title || ('AI Reel ' + numStr)).replace(/"/g, '&quot;');
+                const categorySafe = (reel.category || 'Generative Cinema').replace(/"/g, '&quot;');
+                const posterUrl = reel.poster || ('https://img.youtube.com/vi/' + videoId + '/hqdefault.jpg');
+                const clickHandler = isSubgalleryPage
+                    ? "openAiReelModal('" + videoId + "', '" + titleSafe.replace(/'/g, "\\'") + "')"
+                    : "openReelFullscreen('" + videoId + "', '" + titleSafe.replace(/'/g, "\\'") + "')";
+                const revealClass = isSubgalleryPage ? ' reveal' : '';
+
+                html += `
+                <!-- Reel ${index + 1} -->
+                <div class="ai-reel-box glass-panel${revealClass}" data-video-id="${videoId}"
+                    data-video-title="${titleSafe}" data-index="${index}"
+                    onclick="${clickHandler}">
+                    <div class="ai-reel-player-container">
+                        <div class="ai-reel-player-embed" id="aiPlayer${index}">
+                            <iframe id="aiReelIframe${index}" loading="lazy"
+                                src="https://www.youtube-nocookie.com/embed/${videoId}?autoplay=1&mute=1&controls=0&loop=1&playlist=${videoId}&playsinline=1&modestbranding=1&rel=0&iv_load_policy=3&disablekb=1&enablejsapi=1"
+                                title="${titleSafe}"
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                allowfullscreen></iframe>
+                        </div>
+                        <div class="ai-reel-poster" style="background-image: url('${posterUrl}');"></div>
+                        <div class="ai-reel-overlay">
+                            <div class="ai-reel-top-bar">
+                                <span class="ai-reel-num">${numStr} / ${totalStr}</span>
+                                <span class="ai-slowmo-pill"><span class="slowmo-pulse"></span> 0.5x Slow-Mo</span>
+                            </div>
+                            <div class="ai-reel-bottom-info">
+                                <span class="ai-reel-category">${categorySafe}</span>
+                                <h4 class="ai-reel-title">${titleSafe}</h4>
+                                <span class="ai-reel-prompt-tag"><i class="fas fa-play"></i> Tap to Play with Sound</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>`;
+            });
+            return html;
+        }
+
+        /**
+         * Replaces the reels grid inside HTML files and increments CSS & JS cache-buster versions.
+         */
+        function replaceReelsGridInHtml(htmlSource, reelsList, isSubgallery = false) {
+            const startMarker = '<!-- REELS_GRID_START -->';
+            const endMarker = '<!-- REELS_GRID_END -->';
+            const sIdx = htmlSource.indexOf(startMarker);
+            const eIdx = htmlSource.indexOf(endMarker);
+            
+            let updated = htmlSource;
+            const newReelsHtml = '\n' + generateReelsHtml(reelsList, isSubgallery) + '\n                ';
+
+            if (sIdx !== -1 && eIdx !== -1) {
+                updated = htmlSource.substring(0, sIdx + startMarker.length) + newReelsHtml + htmlSource.substring(eIdx);
+            } else {
+                const gridRegex = /(<div class="ai-reels-grid"[^>]*>)([\s\S]*?)(<\/div>\s*(?:<!--\s*Bottom Back Button|<\/div>\s*<\/section>))/i;
+                updated = htmlSource.replace(gridRegex, `$1\n                ${startMarker}${newReelsHtml}${endMarker}\n            $3`);
+            }
+
+            // Update cache-buster versions on style.css, reels-data.js, script.js
+            const cacheVer = 'v=' + Date.now();
+            updated = updated.replace(/style\.css(?:\?v=[^"'\s>]+)?/g, 'style.css?' + cacheVer);
+            updated = updated.replace(/reels-data\.js(?:\?v=[^"'\s>]+)?/g, 'reels-data.js?' + cacheVer);
+            updated = updated.replace(/script\.js(?:\?v=[^"'\s>]+)?/g, 'script.js?' + cacheVer);
+
+            return updated;
+        }
+
+        /**
          * Standalone JavaScript generator for reels-data.js
-         * Ensures 100% reliability regardless of browser caching or external script state.
          */
         function generateReelsDataJsContent(customReels) {
             const list = customReels || (typeof workingReels !== 'undefined' ? workingReels : (typeof getActiveReels === 'function' ? getActiveReels() : []));
@@ -1778,107 +1865,19 @@ const PRESET_REELS = ${presetsFormatted};
 const STORAGE_KEY = 'orbx_custom_reels';
 const CLOUD_SYNC_KEY = 'orbx_cloud_sync_url';
 
-function extractYouTubeId(urlOrId) {
-    if (!urlOrId) return '';
-    const trimmed = String(urlOrId).trim();
-    if (/^[a-zA-Z0-9_-]{11}$/.test(trimmed)) return trimmed;
-    const shortsMatch = trimmed.match(/\\/shorts\\/([a-zA-Z0-9_-]{11})/);
-    if (shortsMatch && shortsMatch[1]) return shortsMatch[1];
-    const youtuMatch = trimmed.match(/youtu\\.be\\/([a-zA-Z0-9_-]{11})/);
-    if (youtuMatch && youtuMatch[1]) return youtuMatch[1];
-    const watchMatch = trimmed.match(/[?&]v=([a-zA-Z0-9_-]{11})/);
-    if (watchMatch && watchMatch[1]) return watchMatch[1];
-    const embedMatch = trimmed.match(/\\/embed\\/([a-zA-Z0-9_-]{11})/);
-    if (embedMatch && embedMatch[1]) return embedMatch[1];
-    return trimmed;
-}
+${extractYouTubeId.toString()}
 
-function getActiveReels() {
-    try {
-        const stored = localStorage.getItem(STORAGE_KEY);
-        if (stored) {
-            const parsed = JSON.parse(stored);
-            if (Array.isArray(parsed) && parsed.length > 0) return parsed;
-        }
-    } catch (e) {
-        console.warn('Error reading stored reels:', e);
-    }
-    return DEFAULT_REELS;
-}
+${getActiveReels.toString()}
 
-function saveActiveReels(reels) {
-    try {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(reels));
-        window.dispatchEvent(new CustomEvent('orbx_reels_updated', { detail: reels }));
-        return true;
-    } catch (e) {
-        console.error('Error saving reels:', e);
-        return false;
-    }
-}
+${saveActiveReels.toString()}
 
-function resetActiveReels() {
-    try {
-        localStorage.removeItem(STORAGE_KEY);
-        window.dispatchEvent(new CustomEvent('orbx_reels_updated', { detail: DEFAULT_REELS }));
-        return DEFAULT_REELS;
-    } catch (e) {
-        console.error('Error resetting reels:', e);
-        return DEFAULT_REELS;
-    }
-}
+${resetActiveReels.toString()}
 
-function renderReelsGrid(selector = '.ai-reels-grid', isSubgalleryPage = false) {
-    const gridContainer = document.querySelector(selector);
-    if (!gridContainer) return;
+${generateReelsHtml.toString()}
 
-    const reels = getActiveReels();
-    const totalCount = reels.length;
+${renderReelsGrid.toString()}
 
-    let html = '';
-    reels.forEach((reel, index) => {
-        const numStr = String(index + 1).padStart(2, '0');
-        const totalStr = String(totalCount).padStart(2, '0');
-        const videoId = extractYouTubeId(reel.id);
-        const titleSafe = (reel.title || ('AI Reel ' + numStr)).replace(/"/g, '&quot;');
-        const categorySafe = (reel.category || 'Generative Cinema').replace(/"/g, '&quot;');
-        const posterUrl = reel.poster || ('https://img.youtube.com/vi/' + videoId + '/hqdefault.jpg');
-        const clickHandler = isSubgalleryPage
-            ? "openAiReelModal('" + videoId + "', '" + titleSafe.replace(/'/g, "\\\\'") + "')"
-            : "openReelFullscreen('" + videoId + "', '" + titleSafe.replace(/'/g, "\\\\'") + "')";
-
-        html += \`
-        <!-- Reel \${index + 1} -->
-        <div class="ai-reel-box glass-panel reveal" data-video-id="\${videoId}"
-            data-video-title="\${titleSafe}" data-index="\${index}"
-            onclick="\${clickHandler}">
-            <div class="ai-reel-player-container">
-                <div class="ai-reel-player-embed" id="aiPlayer\${index}">
-                    <iframe id="aiReelIframe\${index}" loading="lazy"
-                        src="https://www.youtube-nocookie.com/embed/\${videoId}?autoplay=1&mute=1&controls=0&loop=1&playlist=\${videoId}&playsinline=1&modestbranding=1&rel=0&iv_load_policy=3&disablekb=1&enablejsapi=1"
-                        title="\${titleSafe}"
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                        allowfullscreen></iframe>
-                </div>
-                <div class="ai-reel-poster" style="background-image: url('\${posterUrl}');"></div>
-                <div class="ai-reel-overlay">
-                    <div class="ai-reel-top-bar">
-                        <span class="ai-reel-num">\${numStr} / \${totalStr}</span>
-                        <span class="ai-slowmo-pill"><span class="slowmo-pulse"></span> 0.5x Slow-Mo</span>
-                    </div>
-                    <!-- Full screen button removed from video boxes for unobstructed cinematic view -->
-                    <div class="ai-reel-bottom-info">
-                        <span class="ai-reel-category">\${categorySafe}</span>
-                        <h4 class="ai-reel-title">\${titleSafe}</h4>
-                        <span class="ai-reel-prompt-tag"><i class="fas fa-play"></i> Tap to Play with Sound</span>
-                    </div>
-                </div>
-            </div>
-        </div>\`;
-    });
-
-    gridContainer.innerHTML = html;
-}
+${generateReelsDataJsContent.toString()}
 
 // Global exposure
 window.DEFAULT_REELS = DEFAULT_REELS;
@@ -1889,11 +1888,13 @@ window.extractYouTubeId = extractYouTubeId;
 window.getActiveReels = getActiveReels;
 window.saveActiveReels = saveActiveReels;
 window.resetActiveReels = resetActiveReels;
+window.generateReelsHtml = generateReelsHtml;
 window.renderReelsGrid = renderReelsGrid;
 window.generateReelsDataJsContent = generateReelsDataJsContent;
 `;
         }
         window.generateReelsDataJsContent = generateReelsDataJsContent;
+        window.generateReelsHtml = generateReelsHtml;
 
         function openLiveSyncModal() {
             const tokenInput = document.getElementById('githubTokenInput');
@@ -1903,6 +1904,58 @@ window.generateReelsDataJsContent = generateReelsDataJsContent;
             const statusEl = document.getElementById('githubPublishStatus');
             if (statusEl) statusEl.style.display = 'none';
             document.getElementById('liveSyncModal').classList.add('active');
+        }
+
+        async function fetchGitHubFile(filePath, token) {
+            const res = await fetch(`https://api.github.com/repos/${GITHUB_REPO}/contents/${filePath}?ref=${GITHUB_BRANCH}`, {
+                headers: {
+                    'Authorization': `token ${token}`,
+                    'Accept': 'application/vnd.github.v3+json'
+                }
+            });
+            if (!res.ok) throw new Error(`Could not read ${filePath} from GitHub (${res.status} ${res.statusText})`);
+            const data = await res.json();
+            const decoded = decodeURIComponent(escape(atob(data.content.replace(/\s/g, ''))));
+            return { sha: data.sha, content: decoded };
+        }
+
+        async function putGitHubFile(filePath, fileContent, fileSha, commitMessage, token) {
+            const encoded = btoa(unescape(encodeURIComponent(fileContent)));
+            const payload = {
+                message: commitMessage,
+                content: encoded,
+                branch: GITHUB_BRANCH
+            };
+            if (fileSha) payload.sha = fileSha;
+
+            const res = await fetch(`https://api.github.com/repos/${GITHUB_REPO}/contents/${filePath}`, {
+                method: 'PUT',
+                headers: {
+                    'Authorization': `token ${token}`,
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/vnd.github.v3+json'
+                },
+                body: JSON.stringify(payload)
+            });
+            if (!res.ok) {
+                const errData = await res.json().catch(() => ({}));
+                throw new Error(errData.message || res.statusText);
+            }
+            return await res.json();
+        }
+
+        async function triggerGitHubPagesBuild(token) {
+            try {
+                await fetch(`https://api.github.com/repos/${GITHUB_REPO}/pages/builds`, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `token ${token}`,
+                        'Accept': 'application/vnd.github.v3+json'
+                    }
+                });
+            } catch (e) {
+                console.warn('Pages build trigger note:', e);
+            }
         }
 
         async function publishToGitHub() {
@@ -1921,96 +1974,114 @@ window.generateReelsDataJsContent = generateReelsDataJsContent;
             localStorage.setItem(GITHUB_TOKEN_KEY, token);
             if (tokenInput) tokenInput.value = token;
 
-            try {
+            const updateStatus = (msg) => {
                 if (statusEl) {
                     statusEl.style.display = 'block';
-                    statusEl.innerHTML = '<span style="color:var(--gold-light);"><i class="fas fa-spinner fa-spin"></i> Connecting to GitHub repository...</span>';
+                    statusEl.innerHTML = `<span style="color:var(--gold-light);"><i class="fas fa-spinner fa-spin"></i> ${msg}</span>`;
                 }
+            };
 
-                // 1. Fetch current file sha from GitHub
-                let sha = null;
-                try {
-                    const getRes = await fetch(`https://api.github.com/repos/${GITHUB_REPO}/contents/${GITHUB_FILE_PATH}?ref=${GITHUB_BRANCH}`, {
-                        headers: {
-                            'Authorization': `token ${token}`,
-                            'Accept': 'application/vnd.github.v3+json'
-                        }
-                    });
-                    if (getRes.ok) {
-                        const getData = await getRes.json();
-                        sha = getData.sha;
-                    }
-                } catch (e) {
-                    console.warn('Could not fetch existing SHA:', e);
-                }
+            try {
+                updateStatus('Connecting to GitHub repository...');
+
+                // 1. Commit reels-data.js
+                updateStatus('1/4 Updating reels-data.js (JavaScript controller)...');
+                const jsFile = await fetchGitHubFile('reels-data.js', token);
+                const newJsContent = generateReelsDataJsContent(workingReels);
+                await putGitHubFile('reels-data.js', newJsContent, jsFile.sha, 'Update AI reels data controller via Agent Studio', token);
+
+                // 2. Commit index.html
+                updateStatus('2/4 Updating index.html (baked HTML & Java/CSS cache version)...');
+                const indexFile = await fetchGitHubFile('index.html', token);
+                const newIndexHtml = replaceReelsGridInHtml(indexFile.content, workingReels, false);
+                await putGitHubFile('index.html', newIndexHtml, indexFile.sha, 'Update AI reels showcase in index.html via Agent Studio', token);
+
+                // 3. Commit ai-video-production.html
+                updateStatus('3/4 Updating ai-video-production.html (baked HTML & Java/CSS cache version)...');
+                const aiPageFile = await fetchGitHubFile('ai-video-production.html', token);
+                const newAiPageHtml = replaceReelsGridInHtml(aiPageFile.content, workingReels, true);
+                await putGitHubFile('ai-video-production.html', newAiPageHtml, aiPageFile.sha, 'Update AI reels showcase in ai-video-production.html via Agent Studio', token);
+
+                // 4. Trigger live GitHub Pages deployment
+                updateStatus('4/4 Triggering live deployment across all devices worldwide...');
+                await triggerGitHubPagesBuild(token);
+
+                // Save locally too
+                saveActiveReels(workingReels);
 
                 if (statusEl) {
-                    statusEl.innerHTML = '<span style="color:var(--gold-light);"><i class="fas fa-spinner fa-spin"></i> Committing updated reels to GitHub...</span>';
+                    statusEl.innerHTML = `
+                        <div style="background: rgba(16, 185, 129, 0.15); border: 1px solid #10b981; padding: 14px; border-radius: 10px; color: #a7f3d0; margin-top: 10px;">
+                            <div style="font-size: 0.95rem; font-weight: 700; color: #10b981;">
+                                <i class="fas fa-check-circle"></i> Published Successfully to All Devices!
+                            </div>
+                            <ul style="margin: 8px 0 8px 18px; padding: 0; font-size: 0.82rem; color: #e2e8f0; line-height: 1.6;">
+                                <li><strong style="color:#a7f3d0;">HTML Files:</strong> Updated reels inside <code>index.html</code> and <code>ai-video-production.html</code></li>
+                                <li><strong style="color:#a7f3d0;">JavaScript (Java):</strong> Updated <code>reels-data.js</code> with active reels</li>
+                                <li><strong style="color:#a7f3d0;">CSS & Cache:</strong> Cache buster version incremented so browsers load fresh styles and scripts</li>
+                                <li><strong style="color:#a7f3d0;">GitHub Pages:</strong> Live build triggered. All visitors and devices worldwide will see changes within ~30-60 seconds on <strong>orbxmedia.in</strong>!</li>
+                            </ul>
+                        </div>`;
                 }
-
-                // 2. Generate updated file content with the working reels as DEFAULT_REELS
-                const newContent = generateReelsDataJsContent(workingReels);
-                const encodedContent = btoa(unescape(encodeURIComponent(newContent)));
-
-                // 3. Send PUT request to GitHub API
-                const payload = {
-                    message: `Update AI reels showcase via Agent Studio [skip ci]`,
-                    content: encodedContent,
-                    branch: GITHUB_BRANCH
-                };
-                if (sha) payload.sha = sha;
-
-                const putRes = await fetch(`https://api.github.com/repos/${GITHUB_REPO}/contents/${GITHUB_FILE_PATH}`, {
-                    method: 'PUT',
-                    headers: {
-                        'Authorization': `token ${token}`,
-                        'Content-Type': 'application/json',
-                        'Accept': 'application/vnd.github.v3+json'
-                    },
-                    body: JSON.stringify(payload)
-                });
-
-                if (putRes.ok) {
-                    saveActiveReels(workingReels);
-                    if (statusEl) {
-                        statusEl.innerHTML = `
-                            <div style="background: rgba(16, 185, 129, 0.15); border: 1px solid #10b981; padding: 12px; border-radius: 8px; color: #a7f3d0; margin-top: 8px;">
-                                <i class="fas fa-check-circle" style="color: #10b981;"></i> <strong>Published successfully to GitHub!</strong>
-                                <div style="font-size: 0.78rem; margin-top: 4px; color: #e2e8f0;">
-                                    GitHub Pages is deploying your changes. Within ~30-60 seconds, all devices and visitors across the world will see your new reels on <strong>orbxmedia.in</strong>!
-                                </div>
-                            </div>`;
-                    }
-                    showToast('Published live to GitHub! Updating all devices...');
-                } else {
-                    const errData = await putRes.json().catch(() => ({}));
-                    if (statusEl) {
-                        statusEl.innerHTML = `<span style="color:#f87171;"><i class="fas fa-times-circle"></i> Error from GitHub: ${errData.message || putRes.statusText}</span>`;
-                    }
-                }
+                showToast('Published live to all devices! HTML, JS & CSS synced.');
             } catch (err) {
                 if (statusEl) {
-                    statusEl.innerHTML = `<span style="color:#f87171;"><i class="fas fa-times-circle"></i> Connection failed: ${err.message}</span>`;
+                    statusEl.innerHTML = `<span style="color:#f87171;"><i class="fas fa-times-circle"></i> Publish failed: ${err.message}</span>`;
                 }
             }
         }
 
-        function downloadReelsFile() {
-            const content = generateReelsDataJsContent(workingReels);
-            const blob = new Blob([content], { type: 'application/javascript' });
+        function downloadFile(filename, content, type = 'text/plain') {
+            const blob = new Blob([content], { type });
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
-            a.download = 'reels-data.js';
+            a.download = filename;
             document.body.appendChild(a);
             a.click();
             document.body.removeChild(a);
             URL.revokeObjectURL(url);
-            showToast('Downloaded reels-data.js! Drop it into your website folder.');
+        }
+
+        function downloadReelsFile() {
+            const content = generateReelsDataJsContent(workingReels);
+            downloadFile('reels-data.js', content, 'application/javascript');
+            showToast('Downloaded reels-data.js!');
+        }
+
+        async function downloadIndexHtml() {
+            try {
+                const res = await fetch('index.html');
+                const text = await res.text();
+                const updated = replaceReelsGridInHtml(text, workingReels, false);
+                downloadFile('index.html', updated, 'text/html');
+                showToast('Downloaded index.html with new reels!');
+            } catch (e) {
+                showToast('Could not read index.html: ' + e.message);
+            }
+        }
+
+        async function downloadAiPageHtml() {
+            try {
+                const res = await fetch('ai-video-production.html');
+                const text = await res.text();
+                const updated = replaceReelsGridInHtml(text, workingReels, true);
+                downloadFile('ai-video-production.html', updated, 'text/html');
+                showToast('Downloaded ai-video-production.html with new reels!');
+            } catch (e) {
+                showToast('Could not read ai-video-production.html: ' + e.message);
+            }
+        }
+
+        async function downloadAllFiles() {
+            downloadReelsFile();
+            setTimeout(downloadIndexHtml, 300);
+            setTimeout(downloadAiPageHtml, 600);
+            showToast('Downloading all updated files (JS & HTML)...');
         }
 
         function copyGitPushCmd() {
-            const cmd = 'git add reels-data.js && git commit -m "Update AI reels showcase" && git push origin main';
+            const cmd = 'git add index.html ai-video-production.html reels-data.js && git commit -m "Update AI reels showcase across all pages and scripts" && git push origin main';
             navigator.clipboard.writeText(cmd).then(() => {
                 showToast('Copied git push command to clipboard!');
             });

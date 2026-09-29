@@ -159,15 +159,14 @@ function resetActiveReels() {
     }
 }
 
-function renderReelsGrid(selector = '.ai-reels-grid', isSubgalleryPage = false) {
-    const gridContainer = document.querySelector(selector);
-    if (!gridContainer) return;
-
-    const reels = getActiveReels();
-    const totalCount = reels.length;
-
+/**
+ * Generates raw HTML for reels grid to bake directly into HTML files or inject dynamically.
+ */
+function generateReelsHtml(customReels, isSubgalleryPage = false) {
+    const list = customReels || (typeof getActiveReels === 'function' ? getActiveReels() : DEFAULT_REELS);
+    const totalCount = list.length;
     let html = '';
-    reels.forEach((reel, index) => {
+    list.forEach((reel, index) => {
         const numStr = String(index + 1).padStart(2, '0');
         const totalStr = String(totalCount).padStart(2, '0');
         const videoId = extractYouTubeId(reel.id);
@@ -177,38 +176,95 @@ function renderReelsGrid(selector = '.ai-reels-grid', isSubgalleryPage = false) 
         const clickHandler = isSubgalleryPage
             ? "openAiReelModal('" + videoId + "', '" + titleSafe.replace(/'/g, "\\'") + "')"
             : "openReelFullscreen('" + videoId + "', '" + titleSafe.replace(/'/g, "\\'") + "')";
+        const revealClass = isSubgalleryPage ? ' reveal' : '';
 
         html += `
-        <!-- Reel ${index + 1} -->
-        <div class="ai-reel-box glass-panel reveal" data-video-id="${videoId}"
-            data-video-title="${titleSafe}" data-index="${index}"
-            onclick="${clickHandler}">
-            <div class="ai-reel-player-container">
-                <div class="ai-reel-player-embed" id="aiPlayer${index}">
-                    <iframe id="aiReelIframe${index}" loading="lazy"
-                        src="https://www.youtube-nocookie.com/embed/${videoId}?autoplay=1&mute=1&controls=0&loop=1&playlist=${videoId}&playsinline=1&modestbranding=1&rel=0&iv_load_policy=3&disablekb=1&enablejsapi=1"
-                        title="${titleSafe}"
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                        allowfullscreen></iframe>
-                </div>
-                <div class="ai-reel-poster" style="background-image: url('${posterUrl}');"></div>
-                <div class="ai-reel-overlay">
-                    <div class="ai-reel-top-bar">
-                        <span class="ai-reel-num">${numStr} / ${totalStr}</span>
-                        <span class="ai-slowmo-pill"><span class="slowmo-pulse"></span> 0.5x Slow-Mo</span>
+                <!-- Reel ${index + 1} -->
+                <div class="ai-reel-box glass-panel${revealClass}" data-video-id="${videoId}"
+                    data-video-title="${titleSafe}" data-index="${index}"
+                    onclick="${clickHandler}">
+                    <div class="ai-reel-player-container">
+                        <div class="ai-reel-player-embed" id="aiPlayer${index}">
+                            <iframe id="aiReelIframe${index}" loading="lazy"
+                                src="https://www.youtube-nocookie.com/embed/${videoId}?autoplay=1&mute=1&controls=0&loop=1&playlist=${videoId}&playsinline=1&modestbranding=1&rel=0&iv_load_policy=3&disablekb=1&enablejsapi=1"
+                                title="${titleSafe}"
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                allowfullscreen></iframe>
+                        </div>
+                        <div class="ai-reel-poster" style="background-image: url('${posterUrl}');"></div>
+                        <div class="ai-reel-overlay">
+                            <div class="ai-reel-top-bar">
+                                <span class="ai-reel-num">${numStr} / ${totalStr}</span>
+                                <span class="ai-slowmo-pill"><span class="slowmo-pulse"></span> 0.5x Slow-Mo</span>
+                            </div>
+                            <div class="ai-reel-bottom-info">
+                                <span class="ai-reel-category">${categorySafe}</span>
+                                <h4 class="ai-reel-title">${titleSafe}</h4>
+                                <span class="ai-reel-prompt-tag"><i class="fas fa-play"></i> Tap to Play with Sound</span>
+                            </div>
+                        </div>
                     </div>
-                    <!-- Full screen button removed from video boxes for unobstructed cinematic view -->
-                    <div class="ai-reel-bottom-info">
-                        <span class="ai-reel-category">${categorySafe}</span>
-                        <h4 class="ai-reel-title">${titleSafe}</h4>
-                        <span class="ai-reel-prompt-tag"><i class="fas fa-play"></i> Tap to Play with Sound</span>
-                    </div>
-                </div>
-            </div>
-        </div>`;
+                </div>`;
     });
+    return html;
+}
 
-    gridContainer.innerHTML = html;
+function renderReelsGrid(selector = '.ai-reels-grid', isSubgalleryPage = false) {
+    const gridContainer = document.querySelector(selector);
+    if (!gridContainer) return;
+    const reels = getActiveReels();
+    gridContainer.innerHTML = generateReelsHtml(reels, isSubgalleryPage);
+}
+
+/**
+ * Standalone JavaScript generator for reels-data.js
+ */
+function generateReelsDataJsContent(customReels) {
+    const list = customReels || (typeof getActiveReels === 'function' ? getActiveReels() : DEFAULT_REELS);
+    const formatted = JSON.stringify(list, null, 4);
+    const presets = typeof PRESET_REELS !== 'undefined' ? PRESET_REELS : list;
+    const presetsFormatted = JSON.stringify(presets, null, 4);
+
+    return `/**
+ * ORBX MEDIA - AI Video Production Reels Central Data & Sync Controller
+ * Generated by Agent Studio for live deployment across all devices.
+ */
+
+const DEFAULT_REELS = ${formatted};
+
+// Curated library of presets agents can choose to add/swap into the reels section
+const PRESET_REELS = ${presetsFormatted};
+
+const STORAGE_KEY = 'orbx_custom_reels';
+const CLOUD_SYNC_KEY = 'orbx_cloud_sync_url';
+
+${extractYouTubeId.toString()}
+
+${getActiveReels.toString()}
+
+${saveActiveReels.toString()}
+
+${resetActiveReels.toString()}
+
+${generateReelsHtml.toString()}
+
+${renderReelsGrid.toString()}
+
+${generateReelsDataJsContent.toString()}
+
+// Global exposure
+window.DEFAULT_REELS = DEFAULT_REELS;
+window.PRESET_REELS = PRESET_REELS;
+window.STORAGE_KEY = STORAGE_KEY;
+window.CLOUD_SYNC_KEY = CLOUD_SYNC_KEY;
+window.extractYouTubeId = extractYouTubeId;
+window.getActiveReels = getActiveReels;
+window.saveActiveReels = saveActiveReels;
+window.resetActiveReels = resetActiveReels;
+window.generateReelsHtml = generateReelsHtml;
+window.renderReelsGrid = renderReelsGrid;
+window.generateReelsDataJsContent = generateReelsDataJsContent;
+`;
 }
 
 // Global exposure
@@ -220,5 +276,6 @@ window.extractYouTubeId = extractYouTubeId;
 window.getActiveReels = getActiveReels;
 window.saveActiveReels = saveActiveReels;
 window.resetActiveReels = resetActiveReels;
+window.generateReelsHtml = generateReelsHtml;
 window.renderReelsGrid = renderReelsGrid;
 window.generateReelsDataJsContent = generateReelsDataJsContent;
