@@ -5,6 +5,18 @@
 
 const DEFAULT_REELS = [
     {
+        "id": "0B_WWYC0F1g",
+        "title": "Ai Presentation Model",
+        "category": "Generative Cinema",
+        "poster": "https://img.youtube.com/vi/0B_WWYC0F1g/hqdefault.jpg"
+    },
+    {
+        "id": "E4YZjyuEl88",
+        "title": "Ai Presentation Model",
+        "category": "Generative Cinema",
+        "poster": "https://img.youtube.com/vi/E4YZjyuEl88/hqdefault.jpg"
+    },
+    {
         "id": "CW33Gn8cU8w",
         "title": "Cybernetic Vision",
         "category": "Generative Cinema",
@@ -47,12 +59,6 @@ const DEFAULT_REELS = [
         "poster": "https://img.youtube.com/vi/qRqTHi2KHPw/hqdefault.jpg"
     },
     {
-        "id": "E4YZjyuEl88",
-        "title": "Ai Presentation Model",
-        "category": "Generative Cinema",
-        "poster": "https://img.youtube.com/vi/E4YZjyuEl88/hqdefault.jpg"
-    },
-    {
         "id": "CzdGtCWhEHo",
         "title": "Ai Presentation Model",
         "category": "Generative Cinema",
@@ -63,12 +69,6 @@ const DEFAULT_REELS = [
         "title": "Ai Presentation Model",
         "category": "Generative Cinema",
         "poster": "https://img.youtube.com/vi/UOISqxwtnS0/hqdefault.jpg"
-    },
-    {
-        "id": "0B_WWYC0F1g",
-        "title": "Ai Presentation Model",
-        "category": "Generative Cinema",
-        "poster": "https://img.youtube.com/vi/0B_WWYC0F1g/hqdefault.jpg"
     },
     {
         "id": "dxV7kj-M0SM",
